@@ -7,25 +7,25 @@ const steps = [
   {
     title: "Audit-first Scoring",
     description:
-      "Security audits and verifiable on-chain data form the foundation of every protocol score.",
+      "Security audits and verified contract analysis form the foundation of every AuditScore. Protocols without strong audit coverage are automatically penalized to prevent blind APY chasing.",
     icon: ShieldCheck,
   },
   {
     title: "Explainable Metrics",
     description:
-      "Each risk signal is visible, weighted, and clearly explained for transparency.",
+      "Each risk signal—TVL stability, liquidity depth, whale concentration, and audit quality—is independently visible, weighted, and fully explainable. No black-box scores.",
     icon: BarChart3,
   },
   {
     title: "Risk-Adjusted Yield",
     description:
-      "Protocols are compared by safety-adjusted returns, not raw APY.",
+      "Protocols are compared using safety-adjusted returns instead of raw APY, helping users understand how much they can earn versus how much they could lose.",
     icon: Scale,
   },
   {
     title: "Real-Time On-Chain Signals",
     description:
-      "Risk scores update dynamically as liquidity and on-chain behavior change.",
+      "Scores update dynamically based on real-time on-chain behavior, including TVL changes, liquidity shifts, and whale movements—so risk is never outdated.",
     icon: Activity,
   },
 ];
