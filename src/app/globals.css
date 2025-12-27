@@ -1,26 +1,66 @@
 @import "tailwindcss";
 
+/* -----------------------------
+   Tailwind Theme (v4 way)
+-------------------------------- */
+@theme {
+  --color-primary: #135bec;
+  --color-background-light: #f6f6f8;
+  --color-background-dark: #111318;
+  --color-surface-dark: #1c1f27;
+  --color-surface-border: #282e39;
+  --color-text-secondary: #9da6b9;
+
+  --font-display: Inter, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
+}
+
+/* -----------------------------
+   Base colors
+-------------------------------- */
 :root {
   --background: #ffffff;
   --foreground: #171717;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html.dark {
+  --background: #111318;
+  --foreground: #ededed;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-display);
+}
+
+/* -----------------------------
+   Scrollbar
+-------------------------------- */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #111318;
+}
+::-webkit-scrollbar-thumb {
+  background: #282e39;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #3b4354;
+}
+
+/* -----------------------------
+   Utilities
+-------------------------------- */
+.glass-effect {
+  background: rgba(28, 31, 39, 0.7);
+  backdrop-filter: blur(10px);
+}
+
+.gradient-text {
+  background: linear-gradient(to right, #ffffff, #9da6b9);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
