@@ -1,5 +1,5 @@
 import React from 'react'
-
+import Link from 'next/link';
 function Hero() {
   return (
     <>
@@ -29,19 +29,37 @@ function Hero() {
             </p>
 
             <div className="flex flex-wrap gap-4">
-              <button className="h-12 px-6 bg-primary hover:bg-blue-600 text-white font-bold rounded-lg flex items-center gap-2 shadow-lg shadow-blue-500/20">
+              {/* View Dashboard */}
+              <Link
+                href="/dashboard"
+                className="h-12 px-6 bg-primary hover:bg-blue-600
+               text-white font-bold rounded-lg
+               inline-flex items-center gap-2
+               shadow-lg shadow-blue-500/20
+               transition-all duration-200
+               hover:-translate-y-0.5"
+              >
                 View Dashboard
                 <span className="material-symbols-outlined text-sm">
                   arrow_forward
                 </span>
-              </button>
+              </Link>
 
-              <button className="h-12 px-6 bg-surface-dark border border-surface-border hover:bg-surface-border text-white font-bold rounded-lg flex items-center gap-2">
+              {/* Read Documentation */}
+              <Link
+                href="/docs"
+                className="h-12 px-6 bg-surface-dark
+               border border-surface-border
+               hover:bg-surface-border
+               text-white font-bold rounded-lg
+               inline-flex items-center gap-2
+               transition-colors duration-200"
+              >
                 <span className="material-symbols-outlined text-sm">
                   description
                 </span>
                 Read Documentation
-              </button>
+              </Link>
             </div>
 
             <p className="text-sm text-text-secondary">

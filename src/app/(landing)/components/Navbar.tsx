@@ -1,5 +1,5 @@
 import React from 'react'
-
+import Link from 'next/link';
 function Navbar() {
   return (
     <>
@@ -15,16 +15,19 @@ function Navbar() {
           </div>
 
           <nav className="hidden md:flex items-center gap-8">
-            <a className="text-gray-300 hover:text-white text-sm">
+            <Link href="/" className="text-gray-300 hover:text-white text-sm">
               Methodology
-            </a>
-            <a className="text-gray-300 hover:text-white text-sm">Compare</a>
-            <a className="text-gray-300 hover:text-white text-sm">About</a>
+            </Link>
+            <Link href="/" className="text-gray-300 hover:text-white text-sm">Compare</Link>
+            <Link href="/" className="text-gray-300 hover:text-white text-sm">About</Link>
           </nav>
 
-          <button className="bg-primary hover:bg-blue-800 text-white text-sm font-bold h-9 px-5 rounded-lg shadow-lg shadow-blue-900/20">
+          <Link
+            href="/dashboard"
+            className="bg-primary hover:bg-blue-800 text-white text-sm font-bold h-9 px-5 rounded-lg shadow-lg shadow-blue-900/20 inline-flex items-center justify-center"
+          >
             Explore Protocol Risks
-          </button>
+          </Link>
         </div>
       </header>
     </>

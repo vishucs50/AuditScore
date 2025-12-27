@@ -1,5 +1,5 @@
 import React from 'react'
-
+import Link from 'next/link';
 function Cta() {
   return (
     <>
@@ -14,12 +14,32 @@ function Cta() {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="px-8 h-14 bg-white text-primary font-bold rounded-xl shadow-xl">
+            {/* Explore Protocol Risks */}
+            <Link
+              href="/dashboard"
+              className="px-8 h-14
+               bg-white text-primary font-bold
+               rounded-xl shadow-xl
+               inline-flex items-center justify-center
+               transition-all duration-200 ease-out
+               hover:-translate-y-1 hover:shadow-2xl"
+            >
               Explore Protocol Risks
-            </button>
-            <button className="px-8 h-14 bg-blue-800/50 border border-blue-400/30 text-white font-bold rounded-xl">
+            </Link>
+
+            {/* View Methodology */}
+            <Link
+              href="/methodology"
+              className="px-8 h-14
+               bg-blue-800/50 border border-blue-400/30
+               text-white font-bold
+               rounded-xl
+               inline-flex items-center justify-center
+               transition-all duration-200 ease-out
+               hover:bg-blue-700/60 hover:border-blue-300/50"
+            >
               View Methodology
-            </button>
+            </Link>
           </div>
         </div>
       </section>
