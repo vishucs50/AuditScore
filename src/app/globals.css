@@ -1,8 +1,5 @@
 @import "tailwindcss";
 
-/* -----------------------------
-   Tailwind Theme (v4 way)
--------------------------------- */
 @theme {
   --color-primary: #135bec;
   --color-background-light: #f6f6f8;
@@ -10,15 +7,19 @@
   --color-surface-dark: #1c1f27;
   --color-surface-border: #282e39;
   --color-text-secondary: #9da6b9;
-
+  --color-card-dark: #192233;
+  --color-surface-border: #282e39;
+  --color-border-dark: #232f48;
+  --color-success: #22c55e;
+  --color-warning: #eab308;
+  --color-danger: #ef4444;
   --font-display: Inter, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+
     "Liberation Mono", "Courier New", monospace;
 }
 
-/* -----------------------------
-   Base colors
--------------------------------- */
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
@@ -35,9 +36,7 @@ body {
   font-family: var(--font-display);
 }
 
-/* -----------------------------
-   Scrollbar
--------------------------------- */
+
 ::-webkit-scrollbar {
   width: 8px;
 }
@@ -51,9 +50,6 @@ body {
   background: #3b4354;
 }
 
-/* -----------------------------
-   Utilities
--------------------------------- */
 .glass-effect {
   background: rgba(28, 31, 39, 0.7);
   backdrop-filter: blur(10px);
