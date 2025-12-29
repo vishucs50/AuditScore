@@ -46,9 +46,7 @@ export default function StatsGrid() {
 
           <p className="text-white text-2xl font-bold">{s.value}</p>
 
-          <div
-            className={`flex items-center gap-1 text-xs font-medium ${s.trendColor}`}
-          >
+          <div className={`flex items-center gap-1 text-xs font-medium ${s.trendColor}`}>
             <span className="material-symbols-outlined text-sm">
               {s.trend.startsWith("-") ? "arrow_downward" : "trending_up"}
             </span>

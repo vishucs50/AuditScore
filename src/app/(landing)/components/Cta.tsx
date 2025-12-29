@@ -16,7 +16,7 @@ function Cta() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             {/* Explore Protocol Risks */}
             <Link
-              href="/dashboard"
+              href="/protocol"
               className="px-8 h-14
                bg-white text-primary font-bold
                rounded-xl shadow-xl
