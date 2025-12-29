@@ -1,6 +1,20 @@
 import React from 'react'
+import Link from 'next/link';
+import { useState } from 'react';
+import { Protocol } from '@/lib/models/protocols';
+type ListProtocolProps = {
+  protocols: Protocol[];
+};
+function ListProtocol({protocols}:ListProtocolProps) {
+  const ITEMS_PER_PAGE = 5;
+  const [currentPage, setCurrentPage] = useState(1);
+   const totalPages = Math.ceil(protocols.length / ITEMS_PER_PAGE);
 
-function ListProtocol() {
+   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+   const endIndex = startIndex + ITEMS_PER_PAGE;
+
+   const visibleProtocols = protocols.slice(startIndex, endIndex);
+   console.log(visibleProtocols[0].tvl)
   return (
     <>
       <div className="w-full overflow-hidden rounded-xl border border-[#324467] bg-[#161e2c]">
@@ -16,52 +30,7 @@ function ListProtocol() {
         {/* List */}
         <div className="flex flex-col divide-y divide-border-dark">
           {/* === PROTOCOL ROW === */}
-          {[
-            {
-              name: "Aave V3",
-              desc: "Decentralized liquidity protocol for lending and borrowing.",
-              chain: "Ethereum",
-              tvl: "$12.4B",
-              apy: "3.2% - 12.5%",
-              score: "96/100",
-              risk: "Low Risk",
-              color: "#0bda5e",
-              icon: "savings",
-            },
-            {
-              name: "Curve Finance",
-              desc: "AMMs for stablecoins and volatile assets.",
-              chain: "Multi-Chain",
-              tvl: "$3.8B",
-              apy: "4.1% - 22%",
-              score: "78/100",
-              risk: "Medium Risk",
-              color: "#ffc107",
-              icon: "show_chart",
-            },
-            {
-              name: "BlastYield",
-              desc: "Aggregated yield farming with leverage.",
-              chain: "Blast",
-              tvl: "$145M",
-              apy: "45.2%",
-              score: "42/100",
-              risk: "High Risk",
-              color: "#fa6238",
-              icon: "token",
-            },
-            {
-              name: "Uniswap V3",
-              desc: "Leading decentralized exchange protocol.",
-              chain: "Multi-Chain",
-              tvl: "$5.8B",
-              apy: "Varies",
-              score: "98/100",
-              risk: "Low Risk",
-              color: "#0bda5e",
-              icon: "swap_horiz",
-            },
-          ].map((p) => (
+          {visibleProtocols.map((p) => (
             <div
               key={p.name}
               className="group flex flex-col md:grid md:grid-cols-12 gap-4 px-6 py-5 hover:bg-[#1c2536] transition-colors items-center"
@@ -86,7 +55,7 @@ function ListProtocol() {
                 <div>
                   <h3 className="text-white font-bold text-lg">{p.name}</h3>
                   <p className="text-[#92a4c9] text-sm mt-1 line-clamp-1">
-                    {p.desc}
+                    {p.description}
                   </p>
                 </div>
               </div>
@@ -94,7 +63,7 @@ function ListProtocol() {
               {/* Chain */}
               <div className="col-span-2 flex items-center gap-2">
                 <div className="px-2.5 py-1 rounded bg-border-dark border border-[#324467] text-xs">
-                  {p.chain}
+                  {p.chains[0]}
                 </div>
               </div>
 
@@ -123,7 +92,7 @@ function ListProtocol() {
                       className="text-sm font-bold"
                       style={{ color: p.color }}
                     >
-                      {p.score}
+                      {p.finalRiskScore}/100
                     </span>
                   </div>
                   <p className="text-[10px] mt-1" style={{ color: p.color }}>
@@ -131,11 +100,14 @@ function ListProtocol() {
                   </p>
                 </div>
 
-                <button className="md:opacity-0 group-hover:opacity-100 transition-opacity w-8 h-8 rounded bg-border-dark hover:bg-primary flex items-center justify-center">
+                <Link
+                  href={`/protocol/${p.slug}`}
+                  className="md:opacity-0 group-hover:opacity-100 transition-opacity w-8 h-8 rounded bg-border-dark hover:bg-primary flex items-center justify-center"
+                >
                   <span className="material-symbols-outlined">
                     chevron_right
                   </span>
-                </button>
+                </Link>
               </div>
             </div>
           ))}
@@ -143,9 +115,55 @@ function ListProtocol() {
       </div>
 
       {/* Pagination */}
-      <div className="flex justify-center pt-4 pb-12">
-        <button className="h-10 px-6 rounded-lg border border-[#324467] bg-card-dark text-sm font-medium hover:bg-border-dark transition-all">
-          Load More Protocols
+      <div className="flex justify-center items-center gap-2 pt-6 pb-12">
+        {/* Previous */}
+        <button
+          disabled={currentPage === 1}
+          onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+          className="h-9 px-4 rounded-lg border border-[#324467] bg-card-dark text-sm disabled:opacity-40 hover:bg-border-dark transition"
+        >
+          Prev
+        </button>
+
+        {/* Page Numbers (max 3 visible) */}
+        {(() => {
+          const maxVisible = 3;
+
+          let startPage = Math.max(1, currentPage - Math.floor(maxVisible / 2));
+
+          let endPage = startPage + maxVisible - 1;
+
+          if (endPage > totalPages) {
+            endPage = totalPages;
+            startPage = Math.max(1, endPage - maxVisible + 1);
+          }
+
+          return Array.from(
+            { length: endPage - startPage + 1 },
+            (_, i) => startPage + i
+          ).map((page) => (
+            <button
+              key={page}
+              onClick={() => setCurrentPage(page)}
+              className={`h-9 w-9 rounded-lg border text-sm font-medium transition
+          ${
+            currentPage === page
+              ? "bg-primary text-white border-primary"
+              : "bg-card-dark border-[#324467] hover:bg-border-dark"
+          }`}
+            >
+              {page}
+            </button>
+          ));
+        })()}
+
+        {/* Next */}
+        <button
+          disabled={currentPage === totalPages}
+          onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+          className="h-9 px-4 rounded-lg border border-[#324467] bg-card-dark text-sm disabled:opacity-40 hover:bg-border-dark transition"
+        >
+          Next
         </button>
       </div>
     </>

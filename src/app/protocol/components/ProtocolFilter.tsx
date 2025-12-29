@@ -16,7 +16,7 @@ export default function ProtocolFilters() {
           </span>
           <input
             className="w-full bg-card-dark border border-[#324467] rounded-lg h-12 pl-12 pr-4 text-white placeholder:text-[#92a4c9] focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
-            placeholder="Search protocols, tokens, or audits..."
+            placeholder="Search protocols..."
           />
         </div>
 

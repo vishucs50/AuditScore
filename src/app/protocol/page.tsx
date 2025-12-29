@@ -1,8 +1,29 @@
+"use client"
 import ListProtocol from "./components/ListProtocol";
 import Navbar from "../(landing)/components/Navbar";
 import StatsGrid from "./components/GlobalStats";
 import ProtocolFilters from "./components/ProtocolFilter";
+import { useState,useEffect } from "react";
+import { Protocol } from "@/lib/models/protocols";
+import { computeGlobalStats } from "@/lib/utils/computeGlobalStats";
+
+
 export default function ProtocolsPage() {
+  const [protocols, setProtocols] = useState<Protocol[]>([]);
+  const [loading,setLoading]= useState(true);
+  useEffect(() => {
+    fetch("/api/protocols")
+    .then((res) => res.json())
+    .then((data) => {
+      setProtocols(data);
+      setLoading(false);
+    });
+  }, []);
+  if (loading) {
+    return <div>Loading protocols...</div>;
+  }
+  const stats = computeGlobalStats(protocols);
+  console.log(stats);
   return (
     <>
       <Navbar />
@@ -18,10 +39,15 @@ export default function ProtocolsPage() {
                 breakdowns for the top DeFi protocols across all chains.
               </p>
             </div>
-            <StatsGrid/>
+            <StatsGrid
+              totalTVL={stats.totalTVL}
+              auditedCount={stats.auditedCount}
+              avgRiskScore={stats.avgRiskScore}
+              highRiskCount={stats.highRiskCount}
+            />
           </div>
-          <ProtocolFilters/>
-        <ListProtocol/>
+          <ProtocolFilters />
+          <ListProtocol protocols={protocols} />
         </div>
       </main>
     </>
