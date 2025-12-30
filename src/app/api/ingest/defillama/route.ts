@@ -5,7 +5,12 @@ import TVLSnapshot from "@/lib/models/TVLSnapshot";
 import { calculateAuditRiskWithExplanation } from "@/lib/risk/auditRisk";
 import buildTVLStabilityRisk from "@/lib/risk/tvlStability";
 
-export async function GET() {
+export async function GET(req: Request) {
+  const auth = req.headers.get("authorization");
+
+  if (auth !== `Bearer ${process.env.CRON_SECRET}`) {
+    return new Response("Unauthorized", { status: 401 });
+  }
   await dbConnect();
 
   const res = await fetch("https://api.llama.fi/protocols");
@@ -26,7 +31,7 @@ export async function GET() {
         description: p.description,
         audits: p.audits,
         tvl: p.tvl,
-        latestTVLUpdatedAt: now,  
+        latestTVLUpdatedAt: now,
       },
       { upsert: true }
     );
