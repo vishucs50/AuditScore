@@ -1,7 +1,7 @@
 import mongoose,{Schema,Document} from "mongoose";
 export interface Protocol extends Document {
   name: string;
-  audits?:number;
+  audits: string;
   slug: string;
   category: string;
   chains: [string];
@@ -9,21 +9,30 @@ export interface Protocol extends Document {
   launchDate: Date;
   finalRiskScore?: number;
   description?: string;
-  auditRisk?: object;
-  tvl?:number;
-  tvlStability?: object;
+  auditRisk: {
+    score: number;
+    summary: string;
+    factor: string[];
+  };
+  tvl?: number;
+  tvlStability: {
+    score: number;
+    summary: string;
+    level: string;
+  };
   liquidityRisk?: object;
   whaleConcentration?: object;
   Protocolmaturity?: object;
   apyVolatility?: object;
-  color?:string;
-  icon?:string;
-  chain?:string;
-  apy?:string;
-  risk?:string;
+  color?: string;
+  icon?: string;
+  chain?: string;
+  apy?: string;
+  risk?: string;
 }
 const ProtocolSchema:Schema<Protocol> = new Schema({
   name: String,
+  audits:String,
   slug:String,
   category: String,
   chains: [String],

@@ -41,6 +41,7 @@ export async function GET() {
         slug: p.slug,
         category: p.category,
         chains: p.chains,
+        audits:p.audits,
         tvl: "$20B", //dummy
         apy: "4.1% - 22%", //dummy
         tvlStability: metricsMap.get(p.slug)?.tvlStability ?? null, //dummy

@@ -8,7 +8,6 @@ export async function GET() {
 
   const res = await fetch("https://api.llama.fi/protocols");
   const protocols = await res.json();
-
   for (const p of protocols.slice(0, 100)) {
     await ProtocolModel.updateOne(
       { slug: p.slug },

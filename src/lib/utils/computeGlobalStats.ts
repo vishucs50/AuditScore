@@ -28,7 +28,10 @@ export function computeGlobalStats(protocols: Protocol[]) {
 
   const totalTVL = protocols.reduce((sum, p) => sum + parseTVL(p.tvl), 0);
 
-  const auditedCount = protocols.filter((p) => p.audits).length;
+  const auditedCount = protocols.reduce(
+    (sum, p) => sum + (parseInt(p.audits, 10) || 0),
+    0
+  );
 
   const avgRiskScore =
     protocols.length === 0
@@ -39,7 +42,7 @@ export function computeGlobalStats(protocols: Protocol[]) {
         );
 
   const highRiskCount = protocols.filter(
-    (p) => (p.finalRiskScore ?? 100) < 40
+    (p) => (p.finalRiskScore ?? 100) <= 60
   ).length;
 
   return {

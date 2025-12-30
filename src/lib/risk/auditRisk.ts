@@ -11,7 +11,7 @@ export function calculateAuditRiskWithExplanation(
   const factors: string[] = [];
   let risk = 0;
 
-  // 1️⃣ Audit coverage
+  // 1️ Audit coverage
   const audits = protocol.audits ?? 0;
   if (audits === 0) {
     risk += 45;
@@ -27,7 +27,7 @@ export function calculateAuditRiskWithExplanation(
     factors.push("Multiple independent audits completed");
   }
 
-  // 2️⃣ Auditor credibility
+  // 2️ Auditor credibility
   const links = protocol.audit_links ?? [];
   const joined = links.join(" ").toLowerCase();
   const TOP_AUDITORS = [
@@ -53,7 +53,7 @@ export function calculateAuditRiskWithExplanation(
     factors.push("Audits conducted by less-established firms");
   }
 
-  // 3️⃣ Audit freshness (protocol age proxy)
+  // 3️ Audit freshness (protocol age proxy)
   if (protocol.listedAt) {
     const ageYears =
       (Date.now() / 1000 - protocol.listedAt) / (365 * 24 * 3600);
@@ -73,7 +73,7 @@ export function calculateAuditRiskWithExplanation(
     }
   }
 
-  // 4️⃣ Disclosure / audit notes
+  // 4️ Disclosure / audit notes
   const note = protocol.audit_note?.toLowerCase() ?? "";
   if (note.includes("unaudited") || note.includes("no audit")) {
     risk += 15;
@@ -90,7 +90,7 @@ export function calculateAuditRiskWithExplanation(
   // Clamp score
   const score = Math.min(100, Math.round(risk));
 
-  // 🧠 Generate summary sentence
+  //  Generate summary sentence
   let summary = "Low audit-related risk.";
   if (score >= 75)
     summary = "High audit-related risk due to insufficient or weak auditing.";
