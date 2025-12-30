@@ -14,7 +14,7 @@ export interface Protocol extends Document {
     summary: string;
     factor: string[];
   };
-  tvl?: number;
+  tvl: number;
   tvlStability: {
     score: number;
     summary: string;
@@ -25,7 +25,7 @@ export interface Protocol extends Document {
   Protocolmaturity?: object;
   apyVolatility?: object;
   color?: string;
-  icon?: string;
+  icon: string;
   chain?: string;
   apy?: string;
   risk?: string;
@@ -39,6 +39,8 @@ const ProtocolSchema:Schema<Protocol> = new Schema({
   website: String,
   description:String,
   launchDate: Date,
+  icon:String,
+  tvl:Number,
 });
 
 const ProtocolModel =

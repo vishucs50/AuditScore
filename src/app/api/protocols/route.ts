@@ -42,13 +42,13 @@ export async function GET() {
         category: p.category,
         chains: p.chains,
         audits:p.audits,
-        tvl: "$20B", //dummy
+        tvl: p.tvl, 
         apy: "4.1% - 22%", //dummy
         tvlStability: metricsMap.get(p.slug)?.tvlStability ?? null, //dummy
         finalRiskScore: metricsMap.get(p.slug)?.finalRiskScore ?? null, //dummy
         risk: riskLabel(metricsMap.get(p.slug)?.finalRiskScore ?? null),
         color: riskColor(metricsMap.get(p.slug)?.finalRiskScore ?? null),
-        icon: iconByCategory(p.category),
+        icon: p.icon,
 
       }));
 

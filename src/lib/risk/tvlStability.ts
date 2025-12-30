@@ -2,7 +2,19 @@
     tvl: number;
     timestamp?: number; // optional, useful later
     };
+    export function formatTVL(value: number) {
+      const num = typeof value === "string" ? Number(value) : value;
 
+      if (num >= 1e9) {
+        return `$${(num / 1e9).toFixed(2)}B`;
+      }
+
+      if (num >= 1e6) {
+        return `$${(num / 1e6).toFixed(2)}M`;
+      }
+
+      return `$${num.toLocaleString()}`;
+    }
     function calculateTVLStabilityScore(tvlHistory: TVLHistoryPoint[]) {
     if (tvlHistory.length < 2) return 50;
 

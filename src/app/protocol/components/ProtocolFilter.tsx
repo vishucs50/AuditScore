@@ -1,10 +1,21 @@
 "use client";
-
+import { Protocol } from "@/lib/models/protocols";
 import { useState } from "react";
-
-export default function ProtocolFilters() {
+import Link from "next/link";
+import Image from "next/image";
+export default function ProtocolFilters({
+  protocols,
+}: {
+  protocols: Protocol[];
+}) {
   const [risk, setRisk] = useState("all");
+  const [query, setQuery] = useState("");
 
+  const filtered = query.length
+    ? protocols.filter((p) =>
+        p.name.toLowerCase().includes(query.toLowerCase())
+      )
+    : [];
   return (
     <div className="flex flex-col gap-4">
       {/* Search + Selects Row */}
@@ -15,59 +26,62 @@ export default function ProtocolFilters() {
             search
           </span>
           <input
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
             className="w-full bg-card-dark border border-[#324467] rounded-lg h-12 pl-12 pr-4 text-white placeholder:text-[#92a4c9] focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
             placeholder="Search protocols..."
           />
+          {filtered.length > 0 && (
+            <div className="absolute z-50 mt-2 w-full bg-card-dark border border-[#324467] rounded-xl shadow-xl max-h-64 overflow-y-auto">
+              {filtered.slice(0, 6).map((p) => (
+                <Link
+                  key={p.slug}
+                  href={`/protocol/${p.slug}`}
+                  className="flex items-center justify-between px-4 py-3 hover:bg-[#1f2a40] transition-colors"
+                >
+                  <div className="flex items-center gap-3">
+                    {/* Protocol Icon */}
+                    <Image
+                      src={p.icon}
+                      alt={`${p.name} icon`}
+                      width={24}
+                      height={24}
+                      className="object-contain shrink-0"
+                      style={{
+                        filter: `drop-shadow(0 0 4px ${p.color})`,
+                      }}
+                    />
+
+                    {/* Name + TVL */}
+                    <div className="flex flex-col">
+                      <p className="text-white font-medium leading-tight">
+                        {p.name}
+                      </p>
+                      <p className="text-xs text-[#92a4c9]">
+                        TVL ${(p.tvl / 1e9).toFixed(2)}B
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Risk Score */}
+                  <span className="text-sm font-bold text-primary">
+                    {p.finalRiskScore}
+                  </span>
+                </Link>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Selects */}
         <div className="flex gap-4">
-          <Select icon="expand_more">
-            <option>All Chains</option>
-            <option>Ethereum</option>
-            <option>Solana</option>
-            <option>Arbitrum</option>
-            <option>Optimism</option>
-          </Select>
-
           <Select icon="sort">
             <option>Sort by: TVL</option>
             <option>Sort by: Risk Score</option>
-            <option>Sort by: APY</option>
           </Select>
         </div>
       </div>
 
-      {/* Risk Chips */}
-      <div className="flex flex-wrap gap-2">
-        {["all", "low", "medium", "high"].map((r) => (
-          <button
-            key={r}
-            onClick={() => setRisk(r)}
-            className={`flex items-center h-8 px-4 rounded-full text-sm font-medium transition-colors
-              ${
-                risk === r
-                  ? "bg-primary text-white"
-                  : "bg-border-dark text-[#92a4c9] hover:text-white hover:bg-[#324467]"
-              }`}
-          >
-            {r !== "all" && (
-              <span
-                className={`w-2 h-2 rounded-full mr-2 ${
-                  r === "low"
-                    ? "bg-[#0bda5e]"
-                    : r === "medium"
-                    ? "bg-[#ffc107]"
-                    : "bg-[#fa6238]"
-                }`}
-              />
-            )}
-            {r === "all"
-              ? "All Risks"
-              : `${r[0].toUpperCase()}${r.slice(1)} Risk`}
-          </button>
-        ))}
-      </div>
     </div>
   );
 }

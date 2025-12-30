@@ -15,9 +15,11 @@ export async function GET() {
         name: p.name,
         slug: p.slug,
         category: p.category,
+        icon:p.logo,
         chains: p.chains,
         description:p.description,
         audits:p.audits,
+        tvl:p.tvl,
       },
       { upsert: true }
     );

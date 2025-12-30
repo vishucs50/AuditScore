@@ -46,7 +46,7 @@ export default function ProtocolsPage() {
               highRiskCount={stats.highRiskCount}
             />
           </div>
-          <ProtocolFilters />
+          <ProtocolFilters protocols={protocols}/>
           <ListProtocol protocols={protocols} />
         </div>
       </main>
