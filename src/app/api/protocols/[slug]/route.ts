@@ -39,6 +39,7 @@ export async function GET(
     slug: protocol.slug,
     category: protocol.category,
     chains: protocol.chains,
+    audits:protocol.audits,
     tvl: protocol.tvl, // real value if exists
     apy: metrics?.apyRange ?? "—",
     icon: protocol.icon,

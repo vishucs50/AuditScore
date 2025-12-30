@@ -2,6 +2,7 @@
 
 import React from "react";
 import { motion } from "framer-motion";
+import { formatTVL } from "@/lib/risk/tvlStability";
 import { Protocol } from "@/lib/models/protocols";
 type Props={
     protocol:Protocol;
@@ -116,8 +117,8 @@ const Hero = ({protocol}:Props) => {
 
           <div className="pt-2 flex flex-wrap gap-4 justify-center md:justify-start">
             {[
-              { icon: "verified_user", text: "3 Audits Completed" },
-              { icon: "account_balance", text: "$4.2B TVL" },
+              { icon: "verified_user", text: `${protocol.audits} Audits Completed` },
+              { icon: "account_balance", text: `${formatTVL(protocol.tvl)} TVL` },
             ].map((item) => (
               <motion.div
                 key={item.text}

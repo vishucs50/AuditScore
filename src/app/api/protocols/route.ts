@@ -1,12 +1,7 @@
 import dbConnect from "@/lib/dbConnect";
 import ProtocolModel from "@/lib/models/protocols";
 import MetricsCurrent from "@/lib/models/MetricsCurrent";
-function formatTVL(tvl: number){
-  if (!tvl) return "—";
-  if (tvl >= 1e9) return `$${(tvl / 1e9).toFixed(1)}B`;
-  if (tvl >= 1e6) return `$${(tvl / 1e6).toFixed(1)}M`;
-  return `$${tvl.toLocaleString()}`;
-}
+
 
 function riskLabel(score: number) {
   if (score >= 80) return "Low Risk";
@@ -20,15 +15,7 @@ function riskColor(score: number) {
   return "#ef4444";
 }
 
-function iconByCategory(category: string) {
-  return (
-    {
-      Lending: "savings",
-      DEX: "swap_horiz",
-      Yield: "trending_up",
-    }[category] || "account_balance"
-  );
-}
+
 
 export async function GET() {
     await dbConnect();
@@ -42,10 +29,9 @@ export async function GET() {
         category: p.category,
         chains: p.chains,
         audits:p.audits,
-        tvl: p.tvl, 
-        apy: "4.1% - 22%", //dummy
-        tvlStability: metricsMap.get(p.slug)?.tvlStability ?? null, //dummy
-        finalRiskScore: metricsMap.get(p.slug)?.finalRiskScore ?? null, //dummy
+        tvl: p.tvl,
+        tvlStability: metricsMap.get(p.slug)?.tvlStability ?? null, 
+        finalRiskScore: metricsMap.get(p.slug)?.finalRiskScore ?? null, 
         risk: riskLabel(metricsMap.get(p.slug)?.finalRiskScore ?? null),
         color: riskColor(metricsMap.get(p.slug)?.finalRiskScore ?? null),
         icon: p.icon,

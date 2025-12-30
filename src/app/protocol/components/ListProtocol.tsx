@@ -1,7 +1,7 @@
 import React from 'react'
 import Link from 'next/link';
 import Image from 'next/image';
-import { useState,useEffect } from 'react';
+import { useState } from 'react';
 import { Protocol } from '@/lib/models/protocols';
 import { formatTVL } from '@/lib/risk/tvlStability';
 type ListProtocolProps = {
