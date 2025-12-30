@@ -2,13 +2,6 @@ import dbConnect from "@/lib/dbConnect";
 import ProtocolModel from "@/lib/models/protocols";
 import MetricsCurrent from "@/lib/models/MetricsCurrent";
 
-function formatTVL(tvl?: number) {
-  if (!tvl) return "—";
-  if (tvl >= 1e9) return `$${(tvl / 1e9).toFixed(1)}B`;
-  if (tvl >= 1e6) return `$${(tvl / 1e6).toFixed(1)}M`;
-  return `$${tvl.toLocaleString()}`;
-}
-
 function riskLabel(score?: number) {
   if (!score) return "Unknown";
   if (score >= 80) return "Low Risk";
@@ -23,15 +16,6 @@ function riskColor(score?: number) {
   return "#ef4444";
 }
 
-function iconByCategory(category?: string) {
-  return (
-    {
-      Lending: "savings",
-      DEX: "swap_horiz",
-      Yield: "trending_up",
-    }[category || ""] || "account_balance"
-  );
-}
 
 export async function GET(
   req: Request,
@@ -55,17 +39,16 @@ export async function GET(
     slug: protocol.slug,
     category: protocol.category,
     chains: protocol.chains,
-
-    tvl: formatTVL(metrics?.tvl), // real value if exists
+    audits:protocol.audits,
+    tvl: protocol.tvl, // real value if exists
     apy: metrics?.apyRange ?? "—",
-
+    icon: protocol.icon,
+    description:protocol.description,
     tvlStability: metrics?.tvlStability ?? null,
     auditRisk: metrics?.auditRisk ?? null,
     finalRiskScore: metrics?.finalRiskScore ?? null,
-    description:protocol.description,
     risk: riskLabel(metrics?.finalRiskScore),
     color: riskColor(metrics?.finalRiskScore),
-    icon: iconByCategory(protocol.category),
   };
 
   return Response.json(result);
