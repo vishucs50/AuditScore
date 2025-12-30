@@ -23,6 +23,7 @@ jobs:
 
       - name: Run ingest
         run: |
-          curl -H "Authorization: Bearer $CRON_SECRET" \ https://audit-score.vercel.app/api/ingest/defillama
+          curl -H "Authorization: Bearer $CRON_SECRET"  https://audit-score.vercel.app/api/ingest/defillama
         env:
           MONGODB_URI: ${{ secrets.MONGODB_URI }}
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
