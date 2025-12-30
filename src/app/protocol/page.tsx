@@ -10,6 +10,7 @@ import { computeGlobalStats } from "@/lib/utils/computeGlobalStats";
 
 export default function ProtocolsPage() {
   const [protocols, setProtocols] = useState<Protocol[]>([]);
+  const [sortBy, setSortBy] = useState<"risk" | "tvl">("risk");
   const [loading,setLoading]= useState(true);
   useEffect(() => {
     fetch("/api/protocols")
@@ -46,8 +47,12 @@ export default function ProtocolsPage() {
               highRiskCount={stats.highRiskCount}
             />
           </div>
-          <ProtocolFilters protocols={protocols}/>
-          <ListProtocol protocols={protocols} />
+          <ProtocolFilters
+            protocols={protocols}
+            sortBy={sortBy}
+            setSortBy={setSortBy}
+          />
+          <ListProtocol protocols={protocols} sortBy={sortBy} />
         </div>
       </main>
     </>

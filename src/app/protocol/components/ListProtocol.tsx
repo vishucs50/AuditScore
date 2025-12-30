@@ -1,22 +1,36 @@
 import React from 'react'
 import Link from 'next/link';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import { Protocol } from '@/lib/models/protocols';
 import { formatTVL } from '@/lib/risk/tvlStability';
 type ListProtocolProps = {
   protocols: Protocol[];
+  sortBy: "risk" | "tvl";
 };
-function ListProtocol({protocols}:ListProtocolProps) {
+function getProtocolIcon(icon?: string) {
+  if (!icon || icon.trim() === "") {
+    return null;
+  }
+  return icon;
+}
+function ListProtocol({protocols,sortBy}:ListProtocolProps) {
   const ITEMS_PER_PAGE = 5;
   const [currentPage, setCurrentPage] = useState(1);
-   const totalPages = Math.ceil(protocols.length / ITEMS_PER_PAGE);
+  const sortedProtocols = [...protocols].sort((a, b) => {
+    if (sortBy === "risk") {
+      return Number(b.finalRiskScore) - Number(a.finalRiskScore);
+    }
+    return b.tvl - a.tvl;
+  });
+   const totalPages = Math.ceil(sortedProtocols.length / ITEMS_PER_PAGE);
 
+
+  
    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
    const endIndex = startIndex + ITEMS_PER_PAGE;
 
-   const visibleProtocols = protocols.slice(startIndex, endIndex);
-   console.log(visibleProtocols)
+   const visibleProtocols = sortedProtocols.slice(startIndex, endIndex);
   return (
     <>
       <div className="w-full overflow-hidden rounded-xl border border-[#324467] bg-[#161e2c]">
@@ -46,16 +60,24 @@ function ListProtocol({protocols}:ListProtocolProps) {
                     borderColor: `${p.color}40`,
                   }}
                 >
-                  <Image
-                    src={p.icon} 
-                    alt="icon"
-                    width={24}
-                    height={24}
-                    className="object-contain"
-                    style={{
-                      filter: `drop-shadow(0 0 4px ${p.color})`,
-                    }}
-                  />
+                  {getProtocolIcon(p.icon) ? (
+                    <Image
+                      src={p.icon}
+                      alt={`${p.name} icon`}
+                      width={24}
+                      height={24}
+                      className="object-contain"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).style.display = "none";
+                      }}
+                    />
+                  ) : (
+                    <div className="w-6 h-6 rounded-full bg-border-dark flex items-center justify-center">
+                      <span className="material-symbols-outlined text-[#92a4c9] text-[18px]">
+                        account_balance
+                      </span>
+                    </div>
+                  )}
                 </div>
 
                 <div>

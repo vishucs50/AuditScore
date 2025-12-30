@@ -5,12 +5,14 @@ import Link from "next/link";
 import Image from "next/image";
 export default function ProtocolFilters({
   protocols,
+  sortBy,
+  setSortBy,
 }: {
   protocols: Protocol[];
+  sortBy: "risk" | "tvl";
+  setSortBy: (v: "risk" | "tvl") => void;
 }) {
-  const [risk, setRisk] = useState("all");
   const [query, setQuery] = useState("");
-
   const filtered = query.length
     ? protocols.filter((p) =>
         p.name.toLowerCase().includes(query.toLowerCase())
@@ -75,13 +77,16 @@ export default function ProtocolFilters({
 
         {/* Selects */}
         <div className="flex gap-4">
-          <Select icon="sort">
-            <option>Sort by: TVL</option>
-            <option>Sort by: Risk Score</option>
+          <Select
+            icon="sort"
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value as "risk" | "tvl")}
+          >
+            <option value="risk">Sort by: Risk Score</option>
+            <option value="tvl">Sort by: TVL</option>
           </Select>
         </div>
       </div>
-
     </div>
   );
 }
@@ -89,18 +94,28 @@ export default function ProtocolFilters({
 function Select({
   children,
   icon,
+  value,
+  onChange,
 }: {
   children: React.ReactNode;
   icon: string;
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
 }) {
   return (
     <div className="relative min-w-45">
-      <select className="appearance-none w-full bg-card-dark border border-[#324467] rounded-lg h-12 pl-4 pr-10 text-white focus:outline-none focus:border-primary cursor-pointer">
+      <select
+        value={value}
+        onChange={onChange}
+        className="appearance-none w-full bg-card-dark border border-[#324467] rounded-lg h-12 pl-4 pr-10 text-white focus:outline-none focus:border-primary cursor-pointer"
+      >
         {children}
       </select>
+
       <span className="absolute right-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-[#92a4c9] pointer-events-none">
         {icon}
       </span>
     </div>
   );
 }
+
