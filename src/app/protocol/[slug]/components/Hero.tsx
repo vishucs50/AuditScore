@@ -2,8 +2,20 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-
-const Hero = () => {
+import { Protocol } from "@/lib/models/protocols";
+type Props={
+    protocol:Protocol;
+}
+const Hero = ({protocol}:Props) => {
+  const scoreCircle=(1 - Number(protocol.finalRiskScore) / 100)*264;
+  const score=Number(protocol.finalRiskScore)
+  const glow =
+    score >= 80
+      ? "drop-shadow-[0_0_10px_rgba(34,197,94,0.5)]"
+      : score >= 60
+      ? "drop-shadow-[0_0_10px_rgba(250,204,21,0.5)]"
+      : "drop-shadow-[0_0_10px_rgba(239,68,68,0.5)]";
+;
   return (
     <motion.section
       initial={{ opacity: 0, y: 16 }}
@@ -29,6 +41,7 @@ const Hero = () => {
         {/* Score Circle */}
         <div className="relative size-48 shrink-0 flex items-center justify-center">
           <svg className="size-full -rotate-90 transform" viewBox="0 0 100 100">
+            {/* Background ring */}
             <circle
               cx="50"
               cy="50"
@@ -38,21 +51,20 @@ const Hero = () => {
               strokeWidth="8"
             />
 
-            {/* Animated progress */}
+            {/* Animated progress ring */}
             <motion.circle
               cx="50"
               cy="50"
               r="42"
               fill="none"
-              stroke="#22c55e"
+              stroke={protocol.color}
               strokeWidth="8"
               strokeDasharray="264"
-              strokeDashoffset="264"
               strokeLinecap="round"
               initial={{ strokeDashoffset: 264 }}
-              animate={{ strokeDashoffset: 34 }}
+              animate={{ strokeDashoffset: scoreCircle }}
               transition={{ duration: 1.2, ease: "easeOut" }}
-              className="drop-shadow-[0_0_10px_rgba(34,197,94,0.5)]"
+              className={glow} // ✅ dynamic glow
             />
           </svg>
 
@@ -64,7 +76,7 @@ const Hero = () => {
             className="absolute inset-0 flex flex-col items-center justify-center text-center"
           >
             <span className="text-4xl font-bold text-white tracking-tight">
-              87
+              {protocol.finalRiskScore}
             </span>
             <span className="text-xs text-text-secondary uppercase tracking-wider font-medium mt-1">
               / 100
@@ -77,10 +89,18 @@ const Hero = () => {
           <div className="flex items-center justify-center md:justify-start gap-3">
             <motion.span
               whileHover={{ scale: 1.05 }}
-              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-semibold bg-success/10 text-success border border-success/20"
+              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-semibold bg-success/10  border border-success/20"
+              style={{
+                color: protocol.color,
+                borderColor: `${protocol.color}33`, 
+                backgroundColor: `${protocol.color}1A`, 
+              }}
             >
-              <span className="size-2 rounded-full bg-success" />
-              Low Risk
+              <span
+                className="size-2 rounded-full animate-pulse"
+                style={{ backgroundColor: protocol.color }}
+              />
+              {protocol.risk}
             </motion.span>
 
             <span className="text-text-secondary text-sm">
@@ -88,12 +108,10 @@ const Hero = () => {
             </span>
           </div>
 
-          <h1 className="text-3xl font-bold text-white">Aave V3 Protocol</h1>
+          <h1 className="text-3xl font-bold text-white">{protocol.name}</h1>
 
           <p className="text-text-secondary leading-relaxed max-w-xl">
-            This protocol demonstrates exceptional security standards. With
-            multiple successful audits and high TVL stability, it is considered
-            safe for conservative investment strategies.
+            {protocol.description}
           </p>
 
           <div className="pt-2 flex flex-wrap gap-4 justify-center md:justify-start">

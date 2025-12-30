@@ -2,7 +2,10 @@
 
 import React from "react";
 import { motion ,type Variants} from "framer-motion";
-
+import { Protocol } from "@/lib/models/protocols";
+type Props={
+    protocol:Protocol;
+}
 const containerVariants = {
   hidden: {},
   show: {
@@ -21,7 +24,7 @@ const cardVariants:Variants = {
   },
 };
 
-const RiskBreakdown = () => {
+const RiskBreakdown = ({protocol}:Props) => {
   return (
     <motion.section
       initial={{ opacity: 0 }}
@@ -47,18 +50,18 @@ const RiskBreakdown = () => {
           {
             title: "Audit Risk",
             icon: "gavel",
-            score: 95,
+            score: protocol.auditRisk.score,
             color: "bg-blue-500",
             iconBg: "bg-blue-500/10 text-blue-400",
-            text: "3 major audits completed with 0 critical vulnerabilities unresolved. Audited by Certik & OpenZeppelin.",
+            text: protocol.auditRisk.summary,
           },
           {
             title: "TVL Stability",
             icon: "savings",
-            score: 80,
+            score: Number(protocol.tvlStability.score),
             color: "bg-green-500",
             iconBg: "bg-green-500/10 text-green-400",
-            text: "Total Value Locked is $4.2B. Shown consistent growth of +2% over the last 30 days despite market volatility.",
+            text: protocol.tvlStability.summary,
           },
           {
             title: "Liquidity Risk",
