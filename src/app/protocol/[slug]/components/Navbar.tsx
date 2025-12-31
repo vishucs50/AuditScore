@@ -1,19 +1,38 @@
-import React from 'react'
-import Link from 'next/link';
-function Navbar() {
+"use client";
+
+import React, { useState } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { Protocol } from "@/lib/models/protocols";
+
+type NavbarProps = {
+  protocols: Protocol[];
+};
+
+export default function Navbar({ protocols }: NavbarProps) {
+  const [query, setQuery] = useState("");
+
+  const filtered =
+    query.length > 0
+      ? protocols.filter((p) =>
+          p.name.toLowerCase().includes(query.toLowerCase())
+        )
+      : [];
+
   return (
-    <>
-      <header className="flex items-center  whitespace-nowrap border-b border-solid border-b-border-dark px-6 lg:px-10 py-3 sticky top-0 z-50 bg-[#111722]">
-        <div className="flex flex-1 items-center gap-4 text-white">
-          <div className="size-8 rounded-2xl bg-primary/20 flex items-center justify-center text-primary ">
+    <header className="sticky top-0 z-50 bg-[#111722] border-b border-border-dark px-6 lg:px-10 py-3">
+      <div className="flex items-center justify-between gap-6">
+        {/* Logo */}
+        <div className="flex items-center gap-4 text-white">
+          <div className="size-8 rounded-2xl bg-primary/20 flex items-center justify-center text-primary">
             <span className="material-symbols-outlined text-[20px]">
               shield_lock
             </span>
           </div>
-          <h2 className="text-white text-xl font-bold tracking-[-0.015em]">
-            AuditScore
-          </h2>
+          <h2 className="text-xl font-bold tracking-tight">AuditScore</h2>
         </div>
+
+        {/* Nav */}
         <nav className="hidden md:flex items-center gap-8">
           <Link href="/" className="text-gray-300 hover:text-white text-sm">
             Methodology
@@ -25,24 +44,58 @@ function Navbar() {
             About
           </Link>
         </nav>
-        <div className="flex flex-1 justify-end gap-6 items-center">
-          <label className="hidden md:flex flex-col min-w-40 h-10 max-w-64">
-            <div className="flex w-full h-full rounded-lg bg-border-dark group focus-within:ring-2 ring-primary/50">
-              <div className="text-[#92a4c9] flex items-center pl-3">
-                <span className="material-symbols-outlined text-[20px]">
-                  search
-                </span>
-              </div>
-              <input
-                className="flex-1 bg-transparent text-white placeholder:text-[#92a4c9] px-3 text-sm outline-none"
-                placeholder="Search protocols..."
-              />
+
+        {/* Search */}
+        <div className="relative w-full max-w-xs hidden md:block">
+          <div className="flex items-center h-11 rounded-lg bg-card-dark border border-[#324467] focus-within:ring-1 ring-primary/50">
+            <span className="material-symbols-outlined text-[#92a4c9] pl-3">
+              search
+            </span>
+            <input
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search protocols..."
+              className="w-full h-full bg-transparent pl-3 pr-4 text-sm text-white placeholder:text-[#92a4c9] focus:outline-none"
+            />
+          </div>
+
+          {/* Dropdown */}
+          {filtered.length > 0 && (
+            <div className="absolute mt-2 w-full bg-card-dark border border-[#324467] rounded-xl shadow-xl max-h-72 overflow-y-auto">
+              {filtered.slice(0, 6).map((p) => (
+                <Link
+                  key={p.slug}
+                  href={`/protocol/${p.slug}`}
+                  onClick={() => setQuery("")}
+                  className="flex items-center justify-between px-4 py-3 hover:bg-[#1f2a40] transition"
+                >
+                  <div className="flex items-center gap-3">
+                    <Image
+                      src={p.icon || "/placeholder.png"}
+                      alt={p.name}
+                      width={24}
+                      height={24}
+                      className="shrink-0"
+                    />
+                    <div className="flex flex-col">
+                      <span className="text-white text-sm font-medium">
+                        {p.name}
+                      </span>
+                      <span className="text-xs text-[#92a4c9]">
+                        TVL ${(Number(p.tvl) / 1e9).toFixed(2)}B
+                      </span>
+                    </div>
+                  </div>
+
+                  <span className="text-sm font-bold text-primary">
+                    {p.finalRiskScore}
+                  </span>
+                </Link>
+              ))}
             </div>
-          </label>
+          )}
         </div>
-      </header>
-    </>
+      </div>
+    </header>
   );
 }
-
-export default Navbar
