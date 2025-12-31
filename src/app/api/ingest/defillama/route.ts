@@ -32,6 +32,7 @@ export async function GET(req: Request) {
         audits: p.audits,
         tvl: p.tvl,
         latestTVLUpdatedAt: now,
+        audit_links:p.audit_links,
       },
       { upsert: true }
     );

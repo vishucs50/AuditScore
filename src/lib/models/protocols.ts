@@ -9,6 +9,7 @@ export interface Protocol extends Document {
   launchDate: Date;
   finalRiskScore?: number;
   description?: string;
+  audit_links?:string[];
   auditRisk: {
     score: number;
     summary: string;
@@ -41,6 +42,7 @@ const ProtocolSchema:Schema<Protocol> = new Schema({
   launchDate: Date,
   icon:String,
   tvl:Number,
+  audit_links:[String],
 });
 
 const ProtocolModel =
