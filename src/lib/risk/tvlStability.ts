@@ -24,30 +24,36 @@
       return `$${num.toLocaleString()}`;
     }
 
-   function calculateTVLStabilityScore(tvlHistory: TVLHistoryPoint[]) {
-     if (tvlHistory.length < 12) return 55;
+ function calculateTVLStabilityScore(tvlHistory: TVLHistoryPoint[]) {
+   if (tvlHistory.length < 12) return 55;
 
-     const changes: number[] = [];
-     const MIN_CHANGE = 0.002;
+   const changes: number[] = [];
+   const MIN_CHANGE = 0.002;
 
-     for (let i = 1; i < tvlHistory.length; i++) {
-       const prev = tvlHistory[i - 1].tvl;
-       const curr = tvlHistory[i].tvl;
-       if (prev <= 0) continue;
+   for (let i = 1; i < tvlHistory.length; i++) {
+     const prev = tvlHistory[i - 1].tvl;
+     const curr = tvlHistory[i].tvl;
+     if (prev <= 0) continue;
 
-       const pct = Math.abs(curr - prev) / prev;
-       if (pct >= MIN_CHANGE) changes.push(pct);
-     }
-
-     if (changes.length === 0) return 70;
-
-     const maxVolatility = Math.max(...changes);
-
-     if (maxVolatility <= 0.01) return 85;
-     if (maxVolatility <= 0.03) return 70;
-     if (maxVolatility <= 0.06) return 50;
-     return 25;
+     const pct = Math.abs(curr - prev) / prev;
+     if (pct >= MIN_CHANGE) changes.push(pct);
    }
+
+   if (changes.length === 0) return 80;
+
+   const maxVolatility = Math.max(...changes);
+
+   // continuous mapping
+   const V_MIN = 0.002;
+   const V_MAX = 0.08;
+
+   const v = Math.min(Math.max(maxVolatility, V_MIN), V_MAX);
+
+   const score = 100 - ((v - V_MIN) / (V_MAX - V_MIN)) * 100;
+
+   return Math.round(Math.max(0, Math.min(100, score)));
+ }
+
 
     export default function buildTVLStabilityRisk(tvlHistory: TVLHistoryPoint[]) {
     const score = calculateTVLStabilityScore(tvlHistory);
