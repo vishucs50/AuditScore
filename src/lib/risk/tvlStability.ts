@@ -24,30 +24,31 @@
       return `$${num.toLocaleString()}`;
     }
 
-    function calculateTVLStabilityScore(tvlHistory: TVLHistoryPoint[]) {
-    if (tvlHistory.length < 2) return 50;
+   function calculateTVLStabilityScore(tvlHistory: TVLHistoryPoint[]) {
+     if (tvlHistory.length < 12) return 55;
 
-    const changes = [];
+     const changes: number[] = [];
+     const MIN_CHANGE = 0.002;
 
-    for (let i = 1; i < tvlHistory.length; i++) {
-        const prev = tvlHistory[i - 1].tvl;
-        const curr = tvlHistory[i].tvl;
+     for (let i = 1; i < tvlHistory.length; i++) {
+       const prev = tvlHistory[i - 1].tvl;
+       const curr = tvlHistory[i].tvl;
+       if (prev <= 0) continue;
 
-        const pctChange = Math.abs(curr - prev) / prev;
-        changes.push(pctChange);
-    }
+       const pct = Math.abs(curr - prev) / prev;
+       if (pct >= MIN_CHANGE) changes.push(pct);
+     }
 
-    const avgVolatility = changes.reduce((a, b) => a + b, 0) / changes.length;
+     if (changes.length === 0) return 70;
 
-    let score;
-    if (avgVolatility <= 0.005) score = 95;
-    else if (avgVolatility <= 0.01) score = 85;
-    else if (avgVolatility <= 0.02) score = 70;
-    else if (avgVolatility <= 0.04) score = 45;
-    else score = 20;
+     const maxVolatility = Math.max(...changes);
 
-    return Math.round(score);
-    }
+     if (maxVolatility <= 0.01) return 85;
+     if (maxVolatility <= 0.03) return 70;
+     if (maxVolatility <= 0.06) return 50;
+     return 25;
+   }
+
     export default function buildTVLStabilityRisk(tvlHistory: TVLHistoryPoint[]) {
     const score = calculateTVLStabilityScore(tvlHistory);
     let level;
