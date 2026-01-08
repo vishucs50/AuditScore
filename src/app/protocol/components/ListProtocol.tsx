@@ -19,7 +19,7 @@ function ListProtocol({protocols,sortBy}:ListProtocolProps) {
   const [currentPage, setCurrentPage] = useState(1);
   const sortedProtocols = [...protocols].sort((a, b) => {
     if (sortBy === "risk") {
-      return Number(b.finalRiskScore) - Number(a.finalRiskScore);
+      return Number(b.finalRiskScore.score) - Number(a.finalRiskScore.score);
     }
     return b.tvl - a.tvl;
   });
@@ -119,7 +119,7 @@ function ListProtocol({protocols,sortBy}:ListProtocolProps) {
                       className="text-sm font-bold"
                       style={{ color: p.color }}
                     >
-                      {p.finalRiskScore}/100
+                      {p.finalRiskScore.score}/100
                     </span>
                   </div>
                   <p className="text-[10px] mt-1" style={{ color: p.color }}>

@@ -80,10 +80,10 @@ const RiskBreakdown = ({protocol}:Props) => {
           {
             title: "Whale Concentration",
             icon: "pie_chart",
-            score: 60,
+            score: protocol.whaleConcentration.score,
             color: "bg-orange-400",
             iconBg: "bg-orange-500/10 text-orange-400",
-            text: "Top 10 holders own 15% of the governance token supply. Moderate risk of governance manipulation.",
+            text: protocol.whaleConcentration.summary,
           },
           {
             title: "Protocol Maturity",
@@ -94,12 +94,12 @@ const RiskBreakdown = ({protocol}:Props) => {
             text: protocol.protocolMaturity.summary,
           },
           {
-            title: "APY Volatility",
+            title: "Composability Risk",
             icon: "ssid_chart",
-            score: 82,
+            score: protocol.dependencyRisk.score,
             color: "bg-teal-500",
             iconBg: "bg-teal-500/10 text-teal-400",
-            text: "Low volatility in returns. Standard deviation of APY over the last 90 days is 0.4%.",
+            text: protocol.dependencyRisk.summary,
           },
         ].map((card) => (
           <motion.div

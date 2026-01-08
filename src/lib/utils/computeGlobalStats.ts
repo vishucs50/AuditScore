@@ -37,12 +37,12 @@ export function computeGlobalStats(protocols: Protocol[]) {
     protocols.length === 0
       ? 0
       : Math.round(
-          protocols.reduce((sum, p) => sum + (p.finalRiskScore ?? 0), 0) /
+          protocols.reduce((sum, p) => sum + (p.finalRiskScore.score ?? 0), 0) /
             protocols.length
         );
 
   const highRiskCount = protocols.filter(
-    (p) => (p.finalRiskScore ?? 100) <= 60
+    (p) => (p.finalRiskScore.score ?? 100) <= 60
   ).length;
 
   return {

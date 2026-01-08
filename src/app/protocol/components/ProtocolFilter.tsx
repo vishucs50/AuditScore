@@ -67,7 +67,7 @@ export default function ProtocolFilters({
 
                   {/* Risk Score */}
                   <span className="text-sm font-bold text-primary">
-                    {p.finalRiskScore}
+                    {p.finalRiskScore.score}
                   </span>
                 </Link>
               ))}
