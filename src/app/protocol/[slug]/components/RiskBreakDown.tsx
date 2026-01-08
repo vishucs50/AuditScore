@@ -50,26 +50,32 @@ const RiskBreakdown = ({protocol}:Props) => {
           {
             title: "Audit Risk",
             icon: "gavel",
-            score: protocol.auditRisk.score,
+            score: protocol.auditRisk.score ?? 50,
             color: "bg-blue-500",
             iconBg: "bg-blue-500/10 text-blue-400",
-            text: protocol.auditRisk.summary,
+            text:
+              protocol.auditRisk.summary ??
+              "Auditrisk assessment not available.",
           },
           {
             title: "TVL Stability",
             icon: "savings",
-            score: Number(protocol.tvlStability.score),
+            score: Number(protocol.tvlStability.score) ?? 50,
             color: "bg-green-500",
             iconBg: "bg-green-500/10 text-green-400",
-            text: protocol.tvlStability.summary,
+            text:
+              protocol.tvlStability.summary ??
+              "TVL stability assessment not available.",
           },
           {
             title: "Liquidity Risk",
             icon: "water_drop",
-            score: 75,
+            score: protocol.liquidityRisk?.score ?? 50,
             color: "bg-yellow-500",
             iconBg: "bg-yellow-500/10 text-yellow-400",
-            text: "Sufficient liquidity depth for swaps under $1M with minimal slippage (<0.1%).",
+            text:
+              protocol.liquidityRisk?.summary ??
+              "Liquidity risk assessment not available.",
           },
           {
             title: "Whale Concentration",

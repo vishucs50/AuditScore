@@ -1,22 +1,53 @@
 "use client";
-
-import React from "react";
 import { motion } from "framer-motion";
 import { formatTVL } from "@/lib/risk/tvlStability";
-import { Protocol } from "@/lib/models/protocols";
-type Props={
-    protocol:Protocol;
+type ProtocolView = {
+  name: string;
+  slug: string;
+  category: string;
+  chains: string[];
+  audits: number;
+  icon: string;
+  description: string;
+
+  selectedChain: string;
+  tvl: number;
+  avgApy: number | null;
+  rewardApy: number | null;
+
+  finalRiskScore: number;
+  risk: string;
+  color: string;
+};
+
+type Props = {
+  protocol: ProtocolView;
+};
+function apyToPercent(apy: number) {
+  const MAX_APY = 5; // cap
+  return Math.min(100, Math.round((apy / MAX_APY) * 100));
 }
-const Hero = ({protocol}:Props) => {
-  const scoreCircle=(1 - Number(protocol.finalRiskScore) / 100)*264;
-  const score=Number(protocol.finalRiskScore)
+const Hero = ({ protocol }: Props) => {
+  const avgApy =
+    typeof protocol?.avgApy === "number"
+      ? Number(protocol.avgApy.toFixed(2))
+      : null;
+  const hasApy = typeof avgApy === "number" && avgApy > 0;
+  const scoreCircle = (1 - Number(protocol.finalRiskScore) / 100) * 264;
+  const score = Number(protocol.finalRiskScore);
+  const bgShade =
+    score >= 80
+      ? "bg-green-500/5 border-green-500/20"
+      : score >= 60
+      ? "bg-yellow-500/5 border-yellow-500/20"
+      : "bg-red-500/5 border-red-500/20";
+
   const glow =
     score >= 80
       ? "drop-shadow-[0_0_10px_rgba(34,197,94,0.5)]"
       : score >= 60
       ? "drop-shadow-[0_0_10px_rgba(250,204,21,0.5)]"
       : "drop-shadow-[0_0_10px_rgba(239,68,68,0.5)]";
-;
   return (
     <motion.section
       initial={{ opacity: 0, y: 16 }}
@@ -29,7 +60,9 @@ const Hero = ({protocol}:Props) => {
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.5 }}
-        className="lg:col-span-2 bg-[#111722] rounded-xl p-6 border border-border-dark flex flex-col md:flex-row items-center gap-8 relative overflow-hidden group"
+        className={`${
+          hasApy ? "lg:col-span-2" : "lg:col-span-3"
+        } bg-[#111722] rounded-xl p-6 border border-border-dark flex flex-col md:flex-row items-center gap-8 relative overflow-hidden group`}
       >
         {/* Background Accent */}
         <motion.div
@@ -80,7 +113,7 @@ const Hero = ({protocol}:Props) => {
               {protocol.finalRiskScore}
             </span>
             <span className="text-xs text-text-secondary uppercase tracking-wider font-medium mt-1">
-              / 100
+              {protocol.finalRiskScore}/ 100
             </span>
           </motion.div>
         </div>
@@ -93,8 +126,8 @@ const Hero = ({protocol}:Props) => {
               className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-semibold bg-success/10  border border-success/20"
               style={{
                 color: protocol.color,
-                borderColor: `${protocol.color}33`, 
-                backgroundColor: `${protocol.color}1A`, 
+                borderColor: `${protocol.color}33`,
+                backgroundColor: `${protocol.color}1A`,
               }}
             >
               <span
@@ -117,8 +150,14 @@ const Hero = ({protocol}:Props) => {
 
           <div className="pt-2 flex flex-wrap gap-4 justify-center md:justify-start">
             {[
-              { icon: "verified_user", text: `${protocol.audits} Audits Completed` },
-              { icon: "account_balance", text: `${formatTVL(protocol.tvl)} TVL` },
+              {
+                icon: "verified_user",
+                text: `${protocol.audits} Audits Completed`,
+              },
+              {
+                icon: "account_balance",
+                text: `${formatTVL(protocol.tvl)} TVL`,
+              },
             ].map((item) => (
               <motion.div
                 key={item.text}
@@ -136,50 +175,71 @@ const Hero = ({protocol}:Props) => {
       </motion.div>
 
       {/* APY Insight Panel */}
-      <motion.div
-        initial={{ opacity: 0, x: 20 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.5, delay: 0.1 }}
-        className="lg:col-span-1 bg-card-dark rounded-xl p-6 border border-border-dark flex flex-col justify-center gap-6"
-      >
-        <div className="flex items-center justify-between">
-          <h3 className="text-lg font-semibold text-white">Current APY</h3>
-          <span className="material-symbols-outlined text-text-secondary">
-            help
-          </span>
-        </div>
-
+      {hasApy && (
         <motion.div
-          initial={{ scale: 0.9, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ delay: 0.4 }}
-          className="flex flex-col gap-1"
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          className="lg:col-span-1 bg-card-dark rounded-xl p-6 border border-border-dark flex flex-col justify-center gap-9"
         >
-          <span className="text-4xl font-bold text-white">3.52%</span>
-          <span className="text-sm text-success flex items-center gap-1">
-            <span className="material-symbols-outlined text-[16px]">
-              trending_up
-            </span>
-            +0.12% (7d avg)
-          </span>
-        </motion.div>
+          <div className="flex items-center justify-between">
+            <h3 className="text-lg font-semibold text-white">Current APY</h3>
 
-        {/* APY Bar */}
-        <div className="h-4 w-full bg-[#111722] rounded-full overflow-hidden flex">
+            {/* Help Tooltip */}
+            <div className="relative group">
+              <span className="material-symbols-outlined text-text-secondary cursor-pointer">
+                help
+              </span>
+
+              {/* Tooltip */}
+              <div
+                className="absolute right-0 top-full mt-2 w-64 rounded-lg 
+                 bg-black border border-border-dark
+                 text-xs text-white p-3
+                 opacity-0 group-hover:opacity-100
+                 pointer-events-none transition-opacity duration-200
+                 shadow-xl z-50"
+              >
+                <strong>APY (Annual Percentage Yield)</strong>
+                <p className="mt-1 text-text-secondary">
+                  APY represents the estimated yearly return including
+                  compounding, based on current rates. Actual returns may vary
+                  depending on liquidity and market conditions.
+                </p>
+
+                {/* Arrow */}
+                <div
+                  className="absolute -top-2 right-3 w-0 h-0
+                   border-l-8 border-r-8 border-b-8
+                   border-l-transparent border-r-transparent
+                   border-b-black"
+                />
+              </div>
+            </div>
+          </div>
+
           <motion.div
-            initial={{ width: 0 }}
-            animate={{ width: "85%" }}
-            transition={{ duration: 0.8 }}
-            className="h-full bg-primary"
-          />
-          <motion.div
-            initial={{ width: 0 }}
-            animate={{ width: "15%" }}
-            transition={{ duration: 0.8, delay: 0.1 }}
-            className="h-full bg-purple-500"
-          />
-        </div>
-      </motion.div>
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ delay: 0.4 }}
+            className="flex flex-col gap-1"
+          >
+            <span className="text-4xl font-bold text-white">
+              {avgApy.toFixed(2)}%
+            </span>
+          </motion.div>
+
+          {/* APY Bar */}
+          <div className="h-4 w-full bg-[#111722] rounded-full overflow-hidden">
+            <motion.div
+              initial={{ width: 0 }}
+              animate={{ width: `${apyToPercent(avgApy)}%` }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+              className="h-full bg-gradient-to-r from-primary to-purple-500"
+            />
+          </div>
+        </motion.div>
+      )}
     </motion.section>
   );
 };
