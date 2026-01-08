@@ -11,6 +11,6 @@ jobs:
     steps:
       - name: Trigger ingest API
         run: |
-          curl -f -H "Authorization: Bearer $CRON_SECRET" https://audit-score.vercel.app/api/ingest/defillama
+          curl -f -H "Authorization: Bearer $CRON_SECRET" https://auditscore.vercel.app/api/ingest/defillama
         env:
           CRON_SECRET: ${{ secrets.CRON_SECRET }}
