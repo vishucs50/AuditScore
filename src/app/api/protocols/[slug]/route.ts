@@ -1,7 +1,7 @@
 import dbConnect from "@/lib/dbConnect";
 import ProtocolModel from "@/lib/models/protocols";
 import MetricsCurrent from "@/lib/models/MetricsCurrent";
-
+import ChainMetrics from "@/lib/models/ChainMetrics";
 function riskLabel(score?: number) {
   if (!score) return "Unknown";
   if (score >= 80) return "Low Risk";
@@ -33,23 +33,40 @@ export async function GET(
   const metrics = await MetricsCurrent.findOne({
     protocolSlug: slug,
   }).lean();
+  const {searchParams}=new URL(req.url);
+  let chain=searchParams.get("chain");
+  if (!chain && protocol.chains?.length) {
+    chain = protocol.chains[0];
+  }
+  const modchain=chain?.trim().toLowerCase();
+  let chainMetrics = null;
+  if (modchain) {
+    chainMetrics = await ChainMetrics.findOne({
+      protocolSlug: slug,
+      chain:modchain,
+    }).lean();
+  }
+    const result = {
+      name: protocol.name,
+      slug: protocol.slug,
+      category: protocol.category,
+      chains: protocol.chains,
+      audits: protocol.audits,
+      icon: protocol.icon,
+      description: protocol.description,
 
-  const result = {
-    name: protocol.name,
-    slug: protocol.slug,
-    category: protocol.category,
-    chains: protocol.chains,
-    audits:protocol.audits,
-    tvl: protocol.tvl, // real value if exists
-    apy: metrics?.apyRange ?? "—",
-    icon: protocol.icon,
-    description:protocol.description,
-    tvlStability: metrics?.tvlStability ?? null,
-    auditRisk: metrics?.auditRisk ?? null,
-    finalRiskScore: metrics?.finalRiskScore ?? null,
-    risk: riskLabel(metrics?.finalRiskScore),
-    color: riskColor(metrics?.finalRiskScore),
-  };
+      selectedChain: chain,
+      tvl: chainMetrics?.tvl ?? protocol.tvl,
+      avgApy: chainMetrics?.avgApy ?? null,
+      rewardApy: chainMetrics?.rewardApy ?? null,
+
+      tvlStability: metrics?.tvlStability ?? null,
+      liquidityRisk: metrics?.liquidityRisk ?? null,
+      auditRisk: metrics?.auditRisk ?? null,
+      finalRiskScore: metrics?.finalRiskScore ?? null,
+      risk: riskLabel(metrics?.finalRiskScore),
+      color: riskColor(metrics?.finalRiskScore),
+    };
 
   return Response.json(result);
 }
