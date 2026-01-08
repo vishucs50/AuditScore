@@ -1,37 +1,62 @@
-export  function groupByChain(pools: any[]) {
-  const map: Record<string, any[]> = {};
+type YieldPool = {
+  chain: string;
+  tvlUsd?: number;
+  apy?: number;
+  apyReward?: number;
+};
+
+export function groupByChain(pools: YieldPool[]) {
+  const grouped: Record<string, YieldPool[]> = {};
 
   for (const pool of pools) {
-    if (!pool.chain) continue;
-     const key = pool.chain.trim().toLowerCase(); 
-    if (!map[key]) map[key] = [];
-    map[key].push(pool);
+    if (!pool?.chain) continue;
+
+    if (!grouped[pool.chain]) {
+      grouped[pool.chain] = [];
+    }
+
+    grouped[pool.chain].push(pool);
   }
 
-  return map;
+  return grouped;
 }
-
-export  function calculateWeightedApy(pools: any[]) {
+export function calculateWeightedApy(
+  pools: {
+    tvlUsd?: number;
+    apy?: number;
+    apyReward?: number;
+  }[]
+) {
   let totalTvl = 0;
   let weightedApy = 0;
-  let weightedReward = 0;
+  let weightedRewardApy = 0;
 
   for (const pool of pools) {
-   const apyBase = pool.apyBase ?? pool.apy ?? 0;
-   const apyReward = pool.apyReward ?? 0;
+    const tvl = pool.tvlUsd ?? 0;
+    if (tvl <= 0) continue;
 
-   if (!pool.tvlUsd) continue;
+    totalTvl += tvl;
 
-   totalTvl += pool.tvlUsd;
-   weightedApy += apyBase * pool.tvlUsd;
-   weightedReward += apyReward * pool.tvlUsd;
+    if (typeof pool.apy === "number") {
+      weightedApy += pool.apy * tvl;
+    }
 
+    if (typeof pool.apyReward === "number") {
+      weightedRewardApy += pool.apyReward * tvl;
+    }
   }
-    if (totalTvl === 0) return null;
-  
+
+  if (totalTvl === 0) {
     return {
-      avgApy: weightedApy / totalTvl,
-      rewardApy: weightedReward / totalTvl,
-      tvl: totalTvl,
+      avgApy: null,
+      rewardApy: null,
+      tvl: 0,
     };
   }
+
+  return {
+    avgApy: Number((weightedApy / totalTvl).toFixed(2)),
+    rewardApy: Number((weightedRewardApy / totalTvl).toFixed(2)),
+    tvl: Number(totalTvl.toFixed(2)),
+  };
+}

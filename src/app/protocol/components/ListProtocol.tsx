@@ -19,7 +19,7 @@ function ListProtocol({protocols,sortBy}:ListProtocolProps) {
   const [currentPage, setCurrentPage] = useState(1);
   const sortedProtocols = [...protocols].sort((a, b) => {
     if (sortBy === "risk") {
-      return Number(b.finalRiskScore) - Number(a.finalRiskScore);
+      return Number(b.finalRiskScore.score) - Number(a.finalRiskScore.score);
     }
     return b.tvl - a.tvl;
   });
@@ -102,7 +102,17 @@ function ListProtocol({protocols,sortBy}:ListProtocolProps) {
 
               {/* Risk */}
               <div className="col-span-2">
-                <span className="text-xs text-[#92a4c9]">Risk Factors</span>
+
+                <div className="mt-2 flex gap-2 flex-wrap">
+                  {p.finalRiskScore?.factors?.map((factor) => (
+                    <div
+                      key={factor}
+                      className="px-2.5 py-1 rounded bg-border-dark border border-[#324467] text-xs text-[#cbd5f5]"
+                    >
+                      {factor}
+                    </div>
+                  ))}
+                </div>
               </div>
 
               {/* Score */}
@@ -119,7 +129,7 @@ function ListProtocol({protocols,sortBy}:ListProtocolProps) {
                       className="text-sm font-bold"
                       style={{ color: p.color }}
                     >
-                      {p.finalRiskScore}/100
+                      {p.finalRiskScore.score}/100
                     </span>
                   </div>
                   <p className="text-[10px] mt-1" style={{ color: p.color }}>

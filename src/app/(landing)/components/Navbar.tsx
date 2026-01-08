@@ -15,11 +15,11 @@ function Navbar() {
           </div>
 
           <nav className="hidden md:flex items-center gap-8">
-            <Link href="/" className="text-gray-300 hover:text-white text-sm">
+            <Link href="/methodology" className="text-gray-300 hover:text-white text-sm">
               Methodology
             </Link>
-            <Link href="/" className="text-gray-300 hover:text-white text-sm">Compare</Link>
-            <Link href="/" className="text-gray-300 hover:text-white text-sm">About</Link>
+            <Link href="/compare" className="text-gray-300 hover:text-white text-sm">Compare</Link>
+            <Link href="/dashboard" className="text-gray-300 hover:text-white text-sm">Dashboard</Link>
           </nav>
 
           <Link

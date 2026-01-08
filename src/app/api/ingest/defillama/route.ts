@@ -4,7 +4,12 @@ import MetricsCurrent from "@/lib/models/MetricsCurrent";
 import TVLSnapshot from "@/lib/models/TVLSnapshot";
 import { calculateAuditRiskWithExplanation } from "@/lib/risk/auditRisk";
 import buildTVLStabilityRisk from "@/lib/risk/tvlStability";
-
+import { groupByChain,calculateWeightedApy } from "@/lib/utils/chainLogic";
+import ChainMetrics from "@/lib/models/ChainMetrics";
+import { calculateLiquidityRiskFromTVLHistory } from "@/lib/risk/LiquidityRisk";
+import { calculateProtocolMaturity } from "@/lib/risk/protocolMaturity";
+import { calculateDependencyRisk } from "@/lib/risk/composabilityRisk";
+import { calculateWhaleConcentrationRisk } from "@/lib/risk/whaleConcentration";
 export async function GET(req: Request) {
   const auth = req.headers.get("authorization");
 
@@ -13,13 +18,36 @@ export async function GET(req: Request) {
   }
   await dbConnect();
 
-  const res = await fetch("https://api.llama.fi/protocols");
+  const res = await fetch("https://api.llama.fi/protocols");  
   const protocols = await res.json();
+  const yieldRes = await fetch("https://yields.llama.fi/pools");
+  const yieldJson = await yieldRes.json();
+  const pools = yieldJson.data;
 
   const now = new Date();
 
   for (const p of protocols.slice(0, 100)) {
-    // 1️ Upsert protocol metadata
+    
+    const protocolPools = pools.filter((pool:any) => pool.project === p.slug);
+    const poolsByChain = groupByChain(protocolPools);
+    for (const [chainKey, chainPools] of Object.entries(poolsByChain)) {
+      const apyData = calculateWeightedApy(chainPools);
+
+      await ChainMetrics.updateOne(
+        { protocolSlug: p.slug, chain: chainKey },
+        {
+          protocolSlug: p.slug,
+          chain: chainKey,
+          avgApy: apyData?.avgApy,
+          rewardApy: apyData?.rewardApy,
+          tvl: apyData?.tvl,
+          updatedAt: new Date(),
+        },
+        { upsert: true }
+      );
+    }
+
+
     await ProtocolModel.updateOne(
       { slug: p.slug },
       {
@@ -55,6 +83,7 @@ export async function GET(req: Request) {
     }).sort({ timestamp: 1 });
 
     // 4️ Build TVL stability from HISTORY
+
     const tvlStability =
       tvlHistory.length >= 2
         ? buildTVLStabilityRisk(tvlHistory)
@@ -64,13 +93,21 @@ export async function GET(req: Request) {
             summary: "Insufficient historical TVL data.",
             factors: ["Not enough data points"],
           };
-
+    const dependencyRisk = calculateDependencyRisk(p);
+    const liquidityRisk = calculateLiquidityRiskFromTVLHistory(tvlHistory);
+    const protocolMaturity = calculateProtocolMaturity(p, tvlHistory);
+    const whaleConcentration=calculateWhaleConcentrationRisk(p);
     // 5️ Update current metrics
     await MetricsCurrent.updateOne(
       { protocolSlug: p.slug },
       {
+        
         auditRisk: calculateAuditRiskWithExplanation(p),
         tvlStability,
+        liquidityRisk,
+        protocolMaturity,
+        dependencyRisk,
+        whaleConcentration,
         updatedAt: now,
       },
       { upsert: true }

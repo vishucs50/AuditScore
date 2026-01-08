@@ -1,15 +1,46 @@
-import mongoose from "mongoose";
+import  { Schema, model, models } from "mongoose";
 
-const ChainMetricsSchema = new mongoose.Schema({
-  protocolSlug: { type: String, index: true },
-  chain: { type: String, index: true },
+const ChainMetricsSchema = new Schema(
+  {
+    protocolSlug: {
+      type: String,
+      required: true,
+      index: true,
+    },
 
-  avgApy: Number,
-  rewardApy: Number,
-  tvl: Number,
+    chain: {
+      type: String,
+      required: true,
+      index: true,
+    },
+    
+    avgApy: {
+      type: Number,
+      default: null,
+    },
 
-  updatedAt: Date,
-});
+    rewardApy: {
+      type: Number,
+      default: null,
+    },
 
-export default mongoose.models.ChainMetrics ||
-  mongoose.model("ChainMetrics", ChainMetricsSchema);
+    tvl: {
+      type: Number,
+      default: null,
+    },
+
+    updatedAt: {
+      type: Date,
+      default: Date.now,
+    },
+  },
+  { timestamps: false }
+);
+
+// 🔑 Prevent duplicates (protocol + chain)
+ChainMetricsSchema.index({ protocolSlug: 1, chain: 1 }, { unique: true });
+
+const ChainMetrics =
+  models.ChainMetrics || model("ChainMetrics", ChainMetricsSchema);
+
+export default ChainMetrics;

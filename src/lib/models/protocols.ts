@@ -7,9 +7,13 @@ export interface Protocol extends Document {
   chains: [string];
   website: string;
   launchDate: Date;
-  finalRiskScore?: number;
+  finalRiskScore:{
+    score:number;
+    factors:string[];
+    level:string;
+  } ;
   description?: string;
-  audit_links?:string[];
+  audit_links?: string[];
   auditRisk: {
     score: number;
     summary: string;
@@ -21,10 +25,28 @@ export interface Protocol extends Document {
     summary: string;
     level: string;
   };
-  liquidityRisk?: object;
-  whaleConcentration?: object;
-  Protocolmaturity?: object;
-  apyVolatility?: object;
+  avgApy: number | null;
+  rewardApy: number | null;
+  liquidityRisk: {
+    score: number;
+    summary: string;
+    level: string;
+  };
+  dependencyRisk: {
+    score: number;
+    summary: string;
+    level: string;
+  };
+  whaleConcentration: {
+    score: number;
+    summary: string;
+    level: string;
+  };
+  protocolMaturity: {
+    score: number;
+    summary: string;
+    level: string;
+  };
   color?: string;
   icon: string;
   chain?: string;

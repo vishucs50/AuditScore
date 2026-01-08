@@ -1,13 +1,12 @@
+type TVLPoint = {
+  tvl: number;
+  timestamp: Date;
+};
 type LiquidityRiskResult = {
   score: number;
   summary: string;
   factors: string[];
 };
-type TVLPoint = {
-  tvl: number;
-  timestamp: Date;
-};
-
 export function calculateLiquidityRiskFromTVLHistory(
   tvlHistory: TVLPoint[]
 ): LiquidityRiskResult {

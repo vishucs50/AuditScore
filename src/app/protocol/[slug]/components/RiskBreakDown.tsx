@@ -50,50 +50,56 @@ const RiskBreakdown = ({protocol}:Props) => {
           {
             title: "Audit Risk",
             icon: "gavel",
-            score: protocol.auditRisk.score,
+            score: protocol.auditRisk.score ?? 50,
             color: "bg-blue-500",
             iconBg: "bg-blue-500/10 text-blue-400",
-            text: protocol.auditRisk.summary,
+            text:
+              protocol.auditRisk.summary ??
+              "Auditrisk assessment not available.",
           },
           {
             title: "TVL Stability",
             icon: "savings",
-            score: Number(protocol.tvlStability.score),
+            score: Number(protocol.tvlStability.score) ?? 50,
             color: "bg-green-500",
             iconBg: "bg-green-500/10 text-green-400",
-            text: protocol.tvlStability.summary,
+            text:
+              protocol.tvlStability.summary ??
+              "TVL stability assessment not available.",
           },
           {
             title: "Liquidity Risk",
             icon: "water_drop",
-            score: 75,
+            score: protocol.liquidityRisk?.score ?? 50,
             color: "bg-yellow-500",
             iconBg: "bg-yellow-500/10 text-yellow-400",
-            text: "Sufficient liquidity depth for swaps under $1M with minimal slippage (<0.1%).",
+            text:
+              protocol.liquidityRisk?.summary ??
+              "Liquidity risk assessment not available.",
           },
           {
             title: "Whale Concentration",
             icon: "pie_chart",
-            score: 60,
+            score: protocol.whaleConcentration.score,
             color: "bg-orange-400",
             iconBg: "bg-orange-500/10 text-orange-400",
-            text: "Top 10 holders own 15% of the governance token supply. Moderate risk of governance manipulation.",
+            text: protocol.whaleConcentration.summary,
           },
           {
             title: "Protocol Maturity",
             icon: "history_edu",
-            score: 90,
+            score: protocol.protocolMaturity.score,
             color: "bg-purple-500",
             iconBg: "bg-purple-500/10 text-purple-400",
-            text: "Deployed for >2 years on Mainnet. Battle-tested code with significant time in production without major exploits.",
+            text: protocol.protocolMaturity.summary,
           },
           {
-            title: "APY Volatility",
+            title: "Composability Risk",
             icon: "ssid_chart",
-            score: 82,
+            score: protocol.dependencyRisk.score,
             color: "bg-teal-500",
             iconBg: "bg-teal-500/10 text-teal-400",
-            text: "Low volatility in returns. Standard deviation of APY over the last 90 days is 0.4%.",
+            text: protocol.dependencyRisk.summary,
           },
         ].map((card) => (
           <motion.div
