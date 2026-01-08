@@ -2,7 +2,6 @@ import dbConnect from "@/lib/dbConnect";
 import ProtocolModel from "@/lib/models/protocols";
 import MetricsCurrent from "@/lib/models/MetricsCurrent";
 import ChainMetrics from "@/lib/models/ChainMetrics";
-import { calculateProtocolRisk } from "@/lib/risk/calculateFinalRiskScore";
 function riskLabel(score?: number) {
   if (!score) return "Unknown";
   if (score >= 80) return "Low Risk";
@@ -34,17 +33,6 @@ export async function GET(
   const metrics = await MetricsCurrent.findOne({
     protocolSlug: slug,
   }).lean();
-  const finalRiskScore = metrics
-    ? calculateProtocolRisk({
-        auditRisk: metrics.auditRisk?.score ?? 0,
-        liquidityRisk: metrics.liquidityRisk?.score ?? 0,
-        whaleRisk: metrics.whaleConcentration?.score ?? 0,
-        composabilityRisk: metrics.dependencyRisk?.score ?? 0,
-        maturityScore: metrics.protocolMaturity?.score ?? 0,
-        tvlStabilityScore: metrics.tvlStability?.score ?? 0,
-      })
-    : null;
-
   const {searchParams}=new URL(req.url);
   let chain=searchParams.get("chain");
   if (!chain && protocol.chains?.length) {
@@ -75,12 +63,10 @@ export async function GET(
       tvlStability: metrics?.tvlStability ?? null,
       liquidityRisk: metrics?.liquidityRisk ?? null,
       protocolMaturity: metrics?.protocolMaturity ?? null,
-      dependencyRisk: metrics.dependencyRisk,
-      whaleConcentration: metrics.whaleConcentration,
       auditRisk: metrics?.auditRisk ?? null,
-      finalRiskScore: finalRiskScore ?? null,
-      risk: riskLabel(finalRiskScore?.score),
-      color: riskColor(finalRiskScore?.score),
+      finalRiskScore: metrics?.finalRiskScore ?? null,
+      risk: riskLabel(metrics?.finalRiskScore),
+      color: riskColor(metrics?.finalRiskScore),
     };
 
   return Response.json(result);

@@ -1,12 +1,6 @@
 "use client";
 import { motion } from "framer-motion";
 import { formatTVL } from "@/lib/risk/tvlStability";
-type FinalRiskScore = {
-  score: number;
-  level: "low" | "medium" | "high";
-  factors: string[]; // two one-word risk factors
-};
-
 type ProtocolView = {
   name: string;
   slug: string;
@@ -21,7 +15,7 @@ type ProtocolView = {
   avgApy: number | null;
   rewardApy: number | null;
 
-  finalRiskScore: FinalRiskScore;
+  finalRiskScore: number;
   risk: string;
   color: string;
 };
@@ -39,8 +33,8 @@ const Hero = ({ protocol }: Props) => {
       ? Number(protocol.avgApy.toFixed(2))
       : null;
   const hasApy = typeof avgApy === "number" && avgApy > 0;
-  const scoreCircle = (1 - Number(protocol.finalRiskScore.score) / 100) * 264;
-  const score = Number(protocol.finalRiskScore.score);
+  const scoreCircle = (1 - Number(protocol.finalRiskScore) / 100) * 264;
+  const score = Number(protocol.finalRiskScore);
 
   const glow =
     score >= 80
@@ -110,10 +104,10 @@ const Hero = ({ protocol }: Props) => {
             className="absolute inset-0 flex flex-col items-center justify-center text-center"
           >
             <span className="text-4xl font-bold text-white tracking-tight">
-              {protocol.finalRiskScore.score}
+              {protocol.finalRiskScore}
             </span>
             <span className="text-xs text-text-secondary uppercase tracking-wider font-medium mt-1">
-              {protocol.finalRiskScore.score}/ 100
+              {protocol.finalRiskScore}/ 100
             </span>
           </motion.div>
         </div>

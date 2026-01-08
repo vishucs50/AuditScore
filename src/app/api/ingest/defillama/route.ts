@@ -8,8 +8,6 @@ import { groupByChain,calculateWeightedApy } from "@/lib/utils/chainLogic";
 import ChainMetrics from "@/lib/models/ChainMetrics";
 import { calculateLiquidityRiskFromTVLHistory } from "@/lib/risk/LiquidityRisk";
 import { calculateProtocolMaturity } from "@/lib/risk/protocolMaturity";
-import { calculateDependencyRisk } from "@/lib/risk/composabilityRisk";
-import { calculateWhaleConcentrationRisk } from "@/lib/risk/whaleConcentration";
 export async function GET(req: Request) {
   const auth = req.headers.get("authorization");
 
@@ -93,10 +91,8 @@ export async function GET(req: Request) {
             summary: "Insufficient historical TVL data.",
             factors: ["Not enough data points"],
           };
-    const dependencyRisk = calculateDependencyRisk(p);
     const liquidityRisk = calculateLiquidityRiskFromTVLHistory(tvlHistory);
     const protocolMaturity = calculateProtocolMaturity(p, tvlHistory);
-    const whaleConcentration=calculateWhaleConcentrationRisk(p);
     // 5️ Update current metrics
     await MetricsCurrent.updateOne(
       { protocolSlug: p.slug },
@@ -106,8 +102,6 @@ export async function GET(req: Request) {
         tvlStability,
         liquidityRisk,
         protocolMaturity,
-        dependencyRisk,
-        whaleConcentration,
         updatedAt: now,
       },
       { upsert: true }
