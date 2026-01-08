@@ -11,11 +11,11 @@ import { calculateProtocolMaturity } from "@/lib/risk/protocolMaturity";
 import { calculateDependencyRisk } from "@/lib/risk/composabilityRisk";
 import { calculateWhaleConcentrationRisk } from "@/lib/risk/whaleConcentration";
 export async function GET(req: Request) {
-  // const auth = req.headers.get("authorization");
+  const auth = req.headers.get("authorization");
 
-  // if (auth !== `Bearer ${process.env.CRON_SECRET}`) {
-  //   return new Response("Unauthorized", { status: 401 });
-  // }
+  if (auth !== `Bearer ${process.env.CRON_SECRET}`) {
+    return new Response("Unauthorized", { status: 401 });
+  }
   await dbConnect();
 
   const res = await fetch("https://api.llama.fi/protocols");  
