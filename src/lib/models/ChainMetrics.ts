@@ -1,4 +1,4 @@
-import mongoose, { Schema, model, models } from "mongoose";
+import  { Schema, model, models } from "mongoose";
 
 const ChainMetricsSchema = new Schema(
   {
@@ -13,7 +13,7 @@ const ChainMetricsSchema = new Schema(
       required: true,
       index: true,
     },
-
+    
     avgApy: {
       type: Number,
       default: null,

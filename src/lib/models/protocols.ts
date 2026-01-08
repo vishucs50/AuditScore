@@ -28,6 +28,12 @@ export interface Protocol extends Document {
     summary: string;
     level: string;
   };
+  protocolMaturity: {
+    score: number;
+    summary: string;
+    level: string;
+    factors:string[];
+  };
   whaleConcentration?: object;
   Protocolmaturity?: object;
   apyVolatility?: object;

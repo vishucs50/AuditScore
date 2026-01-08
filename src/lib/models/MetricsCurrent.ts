@@ -26,7 +26,7 @@ const MetricsSchema = new mongoose.Schema({
   tvlStability: RiskDetailSchema,
   liquidityRisk: RiskDetailSchema,
   whaleConcentration: RiskDetailSchema,
-  Protocolmaturity: RiskDetailSchema,
+  protocolMaturity: RiskDetailSchema,
   apyVolatility: RiskDetailSchema,
   finalRiskScore: {
     score: { type: Number, min: 0, max: 100 },

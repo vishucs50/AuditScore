@@ -88,10 +88,10 @@ const RiskBreakdown = ({protocol}:Props) => {
           {
             title: "Protocol Maturity",
             icon: "history_edu",
-            score: 90,
+            score: protocol.protocolMaturity.score,
             color: "bg-purple-500",
             iconBg: "bg-purple-500/10 text-purple-400",
-            text: "Deployed for >2 years on Mainnet. Battle-tested code with significant time in production without major exploits.",
+            text: protocol.protocolMaturity.summary,
           },
           {
             title: "APY Volatility",

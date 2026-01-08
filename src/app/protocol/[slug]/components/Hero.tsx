@@ -35,12 +35,6 @@ const Hero = ({ protocol }: Props) => {
   const hasApy = typeof avgApy === "number" && avgApy > 0;
   const scoreCircle = (1 - Number(protocol.finalRiskScore) / 100) * 264;
   const score = Number(protocol.finalRiskScore);
-  const bgShade =
-    score >= 80
-      ? "bg-green-500/5 border-green-500/20"
-      : score >= 60
-      ? "bg-yellow-500/5 border-yellow-500/20"
-      : "bg-red-500/5 border-red-500/20";
 
   const glow =
     score >= 80
@@ -235,7 +229,7 @@ const Hero = ({ protocol }: Props) => {
               initial={{ width: 0 }}
               animate={{ width: `${apyToPercent(avgApy)}%` }}
               transition={{ duration: 0.8, ease: "easeOut" }}
-              className="h-full bg-gradient-to-r from-primary to-purple-500"
+              className="h-full bg-linear-to-r from-primary to-purple-500"
             />
           </div>
         </motion.div>

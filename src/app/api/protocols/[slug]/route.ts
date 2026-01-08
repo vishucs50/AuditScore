@@ -62,6 +62,7 @@ export async function GET(
 
       tvlStability: metrics?.tvlStability ?? null,
       liquidityRisk: metrics?.liquidityRisk ?? null,
+      protocolMaturity: metrics?.protocolMaturity ?? null,
       auditRisk: metrics?.auditRisk ?? null,
       finalRiskScore: metrics?.finalRiskScore ?? null,
       risk: riskLabel(metrics?.finalRiskScore),
