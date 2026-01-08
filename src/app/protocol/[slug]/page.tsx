@@ -8,9 +8,9 @@ import { useParams } from "next/navigation";
 import { Protocol } from "@/lib/models/protocols";
 export default function DashboardPage() {
   const { slug } = useParams();
+  const [loading, setLoading] = useState(true);
   const [protocol, setProtocol] = useState(null);
   const [protocols, setProtocols] = useState<Protocol[]>([]);
-  const [loading, setLoading] = useState(true);
   useEffect(() => {
     fetch(`/api/protocols/${slug}`)
       .then((res) => res.json())
