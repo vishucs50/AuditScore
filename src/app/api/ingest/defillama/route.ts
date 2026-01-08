@@ -7,6 +7,7 @@ import buildTVLStabilityRisk from "@/lib/risk/tvlStability";
 import { groupByChain,calculateWeightedApy } from "@/lib/utils/chainLogic";
 import ChainMetrics from "@/lib/models/ChainMetrics";
 import { calculateLiquidityRiskFromTVLHistory } from "@/lib/risk/LiquidityRisk";
+import { calculateProtocolMaturity } from "@/lib/risk/protocolMaturity";
 export async function GET(req: Request) {
   // const auth = req.headers.get("authorization");
 
@@ -91,9 +92,7 @@ export async function GET(req: Request) {
             factors: ["Not enough data points"],
           };
     const liquidityRisk = calculateLiquidityRiskFromTVLHistory(tvlHistory);
-
-   
-
+    const protocolMaturity = calculateProtocolMaturity(p, tvlHistory);
     // 5️ Update current metrics
     await MetricsCurrent.updateOne(
       { protocolSlug: p.slug },
@@ -102,6 +101,7 @@ export async function GET(req: Request) {
         auditRisk: calculateAuditRiskWithExplanation(p),
         tvlStability,
         liquidityRisk,
+        protocolMaturity,
         updatedAt: now,
       },
       { upsert: true }
