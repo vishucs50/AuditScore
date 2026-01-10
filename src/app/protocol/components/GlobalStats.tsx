@@ -59,7 +59,7 @@ export default function StatsGrid({
             "
           >
             {/* Subtle glow */}
-            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition pointer-events-none bg-gradient-to-r from-transparent via-[#3f5aa8]/10 to-transparent" />
+            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition pointer-events-none bg-linear-to-r from-transparent via-[#3f5aa8]/10 to-transparent" />
 
             {/* Header */}
             <div className="flex items-center justify-between mb-3">

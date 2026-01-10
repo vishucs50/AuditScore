@@ -88,7 +88,7 @@ export default function Navbar({ protocols }: NavbarProps) {
                   </div>
 
                   <span className="text-sm font-bold text-primary">
-                    {p.finalRiskScore}
+                    {p.finalRiskScore.score}
                   </span>
                 </Link>
               ))}
