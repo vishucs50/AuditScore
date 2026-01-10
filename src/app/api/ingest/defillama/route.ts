@@ -10,6 +10,11 @@ import { calculateLiquidityRiskFromTVLHistory } from "@/lib/risk/LiquidityRisk";
 import { calculateProtocolMaturity } from "@/lib/risk/protocolMaturity";
 import { calculateDependencyRisk } from "@/lib/risk/composabilityRisk";
 import { calculateWhaleConcentrationRisk } from "@/lib/risk/whaleConcentration";
+import ChainRiskSnapShot from "@/lib/models/ChainRiskSnapShot";
+import { TOP_CHAINS } from "@/lib/constants/topChains";
+import { calculateChainRisk } from "@/lib/risk/calculateChainRisk";
+import MetricsSnapshot from "@/lib/models/MetricsSnapshot";
+import { calculateProtocolRisk } from "@/lib/risk/calculateFinalRiskScore";
 export async function GET(req: Request) {
   const auth = req.headers.get("authorization");
 
@@ -93,16 +98,25 @@ export async function GET(req: Request) {
             summary: "Insufficient historical TVL data.",
             factors: ["Not enough data points"],
           };
+    const auditRisk=calculateAuditRiskWithExplanation(p);
     const dependencyRisk = calculateDependencyRisk(p);
     const liquidityRisk = calculateLiquidityRiskFromTVLHistory(tvlHistory);
     const protocolMaturity = calculateProtocolMaturity(p, tvlHistory);
     const whaleConcentration=calculateWhaleConcentrationRisk(p);
+    const finalRiskScore = calculateProtocolRisk({
+          auditRisk: auditRisk ?.score ?? 0,
+          liquidityRisk: liquidityRisk?.score ?? 0,
+          whaleRisk: whaleConcentration?.score ?? 0,
+          composabilityRisk: dependencyRisk?.score ?? 0,
+          maturityScore: protocolMaturity?.score ?? 0,
+          tvlStabilityScore: tvlStability?.score ?? 0,
+        });
     // 5️ Update current metrics
     await MetricsCurrent.updateOne(
       { protocolSlug: p.slug },
       {
         
-        auditRisk: calculateAuditRiskWithExplanation(p),
+        auditRisk,
         tvlStability,
         liquidityRisk,
         protocolMaturity,
@@ -112,7 +126,21 @@ export async function GET(req: Request) {
       },
       { upsert: true }
     );
+    await MetricsSnapshot.create({
+      protocolSlug: p.slug,
+      finalRiskScore,
+      createdAt: now,
+    });
   }
+  for (const chain of TOP_CHAINS) {
+    const snapshot = await calculateChainRisk(chain);
 
+    if (!snapshot) continue;
+
+    await ChainRiskSnapShot.create({
+      ...snapshot,
+      timestamp: now,
+    });
+  }
   return Response.json({ success: true });
 }

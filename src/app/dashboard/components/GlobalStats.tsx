@@ -83,7 +83,6 @@ export default function StatsGrid({
             <p className="text-white text-2xl font-bold tracking-tight">
               {s.value}
             </p>
-
           </div>
         );
       })}
