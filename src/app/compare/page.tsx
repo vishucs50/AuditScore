@@ -1,5 +1,4 @@
 "use client"
-import Navbar from "../dashboard/components/Navbar";
 import { Protocol } from "@/lib/models/protocols";
 import ProtocolSelectors from "./components/ProtocolSelectors";
 import SummarySection from "./components/SummarySection";
