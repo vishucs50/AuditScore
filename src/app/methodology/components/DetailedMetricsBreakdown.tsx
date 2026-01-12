@@ -228,20 +228,21 @@ function DetailedMetricBreakdown() {
             </span>
           </div>
 
-          <h3 className="text-xl font-bold mb-2">APY Volatility</h3>
+          <h3 className="text-xl font-bold mb-2">Composability Risk</h3>
           <p className="text-text-secondary text-sm mb-4 leading-relaxed">
-            Identifies sustainable yield versus inflationary spikes or
-            bait-and-switch rates.
+            Measures the risk introduced by a protocol’s reliance on external
+            DeFi components such as other protocols, oracles, bridges, and
+            cross-chain infrastructure.
           </p>
 
           <div className="bg-black/20 rounded-lg p-3 text-xs text-text-secondary">
             <span className="text-white font-semibold block mb-1">
               Key Factors:
             </span>
-            • Standard deviation of returns
+            •Number of external protocol integrations
             <br />
-            • Reward token inflation rate
-            <br />• Real yield vs. token emissions
+            • Cross-chain deployments and shared liquidity
+            <br />• Oracle reliance for pricing and state updates
           </div>
         </motion.div>
       </motion.div>

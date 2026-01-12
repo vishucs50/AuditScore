@@ -34,18 +34,26 @@ export default function LiveRiskFeed() {
 
   useEffect(() => {
     async function fetchFeed() {
-      const res = await fetch("/api/live-risk");
-      const data = await res.json();
-      setItems(data);
+      try {
+        const res = await fetch("/api/live-risk");
+        if (!res.ok) throw new Error("Failed to fetch live risk");
+
+        const data = await res.json();
+        setItems(data);
+      } catch (err) {
+        console.error("LiveRiskFeed error:", err);
+        setItems([]);
+      }
     }
 
     fetchFeed();
-    const id = setInterval(fetchFeed, 60_000); // every minute
+    const id = setInterval(fetchFeed, 60_000);
     return () => clearInterval(id);
   }, []);
 
+
   return (
-    <aside className="bg-card-dark rounded-xl border border-border-dark top-24 h-197">
+    <aside className="bg-card-dark rounded-xl border border-border-dark top-24 h-40">
       <div className="p-5 border-b border-border-dark flex justify-between">
         <h2 className="font-bold flex gap-2 items-center">
           <Ping /> Live Risk Feed
