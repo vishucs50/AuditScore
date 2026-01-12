@@ -27,7 +27,7 @@ export default function ProtocolsPage() {
   console.log(stats);
   return (
     <>
-      <Navbar />
+      {/* <Navbar />   */}
 
       <main className="flex-1 w-full flex justify-center py-8">
         {/* Heading */}

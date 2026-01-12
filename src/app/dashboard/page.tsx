@@ -1,6 +1,5 @@
 "use client"
 import StatsGrid from "./components/GlobalStats";
-import Navbar from "./components/Navbar";
 import { useState,useEffect } from "react";
 import { computeGlobalStats } from "@/lib/utils/computeGlobalStats";
 import RiskChart from "./components/RiskChart";
@@ -25,7 +24,6 @@ import { Protocol } from "@/lib/models/protocols";
       if (loading) return <div className="p-10">Loading...</div>;
   return (
     <div className="min-h-screen bg-background-dark">
-      <Navbar protocols={protocols} />
       <main className="max-w-7xl mx-auto px-4 md:px-8 py-8">
         <StatsGrid
           totalTVL={stats.totalTVL}

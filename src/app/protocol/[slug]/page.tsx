@@ -1,5 +1,4 @@
 "use client"
-import Navbar from "./components/Navbar";
 import ContextBar from "./components/ContextBar";
 import Hero from "./components/Hero";
 import RiskBreakdown from "./components/RiskBreakDown";
@@ -48,7 +47,6 @@ export default function DashboardPage() {
   const searchParams = useSearchParams();
   const chain = searchParams.get("chain");
   const [protocol, setProtocol] = useState(null);
-  const [protocols, setProtocols] = useState<[]>([]);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     fetch(`/api/protocols/${slug}${chain ? `?chain=${chain}` : ""}`)
@@ -58,12 +56,7 @@ export default function DashboardPage() {
         setLoading(false);
         console.log(data);
       });
-      fetch("/api/protocols")
-        .then((res) => res.json())
-        .then((data) => {
-          setProtocols(data);
-          setLoading(false);
-        });
+      
   }, [slug,chain]);
 
   if (loading) return <div className="p-10">Loading...</div>;
@@ -71,7 +64,6 @@ export default function DashboardPage() {
 
   return (
     <>
-      <Navbar protocols={protocols}/>
       <main className="flex-1 overflow-x-hidden">
         <div className="layout-container flex h-full grow flex-col max-w-7xl mx-auto px-4 md:px-8 lg:px-10 py-8">
           <ContextBar protocol={protocol}/>
