@@ -1,6 +1,5 @@
 "use client"
 import ListProtocol from "./components/ListProtocol";
-import Navbar from "../(landing)/components/Navbar";
 import StatsGrid from "./components/GlobalStats";
 import ProtocolFilters from "./components/ProtocolFilter";
 import { useState,useEffect } from "react";
@@ -27,7 +26,6 @@ export default function ProtocolsPage() {
   console.log(stats);
   return (
     <>
-      {/* <Navbar />   */}
 
       <main className="flex-1 w-full flex justify-center py-8">
         {/* Heading */}
