@@ -1,7 +1,7 @@
 import "./globals.css";
 import NavbarWrapper from "./components/NavbarWrapper";
 import { Inter } from "next/font/google";
-import { WalletProvider } from "@/context/WalletContext";
+import { Providers } from "./providers";
 const inter = Inter({
   subsets: ["latin"],
   weight: ["400", "500", "700", "900"],
@@ -30,10 +30,10 @@ export default function RootLayout({
       <body
         className={`${inter.variable} bg-background-light dark:bg-background-dark text-slate-900 dark:text-white font-sans overflow-x-hidden min-h-screen flex flex-col`}
       >
-        <WalletProvider>
+        <Providers>
           <NavbarWrapper />
           {children}
-        </WalletProvider>
+        </Providers>
         <footer className="border-t border-surface-border bg-background-dark pt-3 pb-3 px-4 md:px-10 text-text-secondary text-sm text-center">
           © 2026 AuditScore Inc. Not financial advice.
         </footer>

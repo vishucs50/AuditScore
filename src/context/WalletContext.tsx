@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { MetaMaskSDK } from "@metamask/sdk";
 import { ethers } from "ethers";
 
@@ -12,28 +12,36 @@ type WalletContextType = {
 
 const WalletContext = createContext<WalletContextType | null>(null);
 
-const MMSDK = new MetaMaskSDK({
-  dappMetadata: {
-    name: "AuditScore",
-    url: "https://localhost:3000",
-  },
-});
-
 export function WalletProvider({ children }: { children: React.ReactNode }) {
   const [address, setAddress] = useState<string | null>(null);
   const [chainId, setChainId] = useState<number | null>(null);
+  const [sdk, setSdk] = useState<MetaMaskSDK | null>(null);
+
+  // ✅ Init MetaMask ONLY in browser
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const instance = new MetaMaskSDK({
+      dappMetadata: {
+        name: "AuditScore",
+        url: "https://auditscore.vercel.app",
+      },
+    });
+
+    setSdk(instance);
+  }, []);
 
   async function connect() {
-    const ethereum = MMSDK.getProvider();
-    if (!ethereum) throw new Error("MetaMask not found");
+    if (!sdk) return;
+
+    const ethereum = sdk.getProvider();
+    if (!ethereum) return;
 
     const accounts = (await ethereum.request({
       method: "eth_requestAccounts",
     })) as string[];
 
-    if (!accounts || accounts.length === 0) {
-      throw new Error("No accounts returned");
-    }
+    if (!accounts?.length) return;
 
     setAddress(accounts[0]);
 
@@ -51,6 +59,8 @@ export function WalletProvider({ children }: { children: React.ReactNode }) {
 
 export function useWallet() {
   const ctx = useContext(WalletContext);
-  if (!ctx) throw new Error("useWallet must be used inside WalletProvider");
+  if (!ctx) {
+    throw new Error("useWallet must be used inside WalletProvider");
+  }
   return ctx;
 }
