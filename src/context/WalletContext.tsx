@@ -31,24 +31,28 @@ export function WalletProvider({ children }: { children: React.ReactNode }) {
     setSdk(instance);
   }, []);
 
-  async function connect() {
-    if (!sdk) return;
+ async function connect() {
+   if (!sdk) return;
 
-    const ethereum = sdk.getProvider();
-    if (!ethereum) return;
+   const ethereum = sdk.getProvider();
+   if (!ethereum) return;
 
-    const accounts = (await ethereum.request({
-      method: "eth_requestAccounts",
-    })) as string[];
+   const accounts = (await ethereum.request({
+     method: "eth_requestAccounts",
+   })) as string[];
 
-    if (!accounts?.length) return;
+   if (!accounts?.length) return;
 
-    setAddress(accounts[0]);
+   setAddress(accounts[0]);
 
-    const provider = new ethers.BrowserProvider(ethereum);
-    const network = await provider.getNetwork();
-    setChainId(Number(network.chainId));
-  }
+   // 👇 lazy import ethers (client-only)
+   const { ethers } = await import("ethers");
+
+   const provider = new ethers.BrowserProvider(ethereum);
+   const network = await provider.getNetwork();
+   setChainId(Number(network.chainId));
+ }
+
 
   return (
     <WalletContext.Provider value={{ address, chainId, connect }}>
