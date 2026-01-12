@@ -64,7 +64,11 @@ export async function GET() {
       tvl: p.tvl,
 
       tvlStability: m.tvlStability ?? null,
-
+      liquidityRisk: m?.liquidityRisk ?? null,
+      protocolMaturity: m?.protocolMaturity ?? null,
+      dependencyRisk: m.dependencyRisk,
+      whaleConcentration: m.whaleConcentration,
+      auditRisk: m?.auditRisk ?? null,
       finalRiskScore,
       risk: riskLabel(finalRiskScore.score),
       color: riskColor(finalRiskScore.score),

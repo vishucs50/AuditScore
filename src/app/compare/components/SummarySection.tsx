@@ -1,4 +1,11 @@
-export default function SummarySection() {
+import { Protocol } from "@/lib/models/protocols";
+import { formatTVL } from "@/lib/risk/tvlStability";
+type SummarySectionProps = {
+  protocolA: Protocol;
+  protocolB: Protocol;
+};
+
+export default function SummarySection({ protocolA, protocolB }: SummarySectionProps) {
   return (
     <div className="flex flex-col gap-6 px-4">
       {/* Top Level Summary Cards */}
@@ -14,28 +21,20 @@ export default function SummarySection() {
               </p>
               <div className="flex items-baseline gap-2 mt-1">
                 <h3 className="text-4xl font-black text-slate-900 dark:text-white">
-                  92
+                  {protocolA.finalRiskScore.score}
                   <span className="text-xl text-text-secondary font-normal">
                     /100
                   </span>
                 </h3>
                 <span className="bg-risk-low/20 text-risk-low text-xs font-bold px-2 py-1 rounded-full border border-risk-low/20">
-                  LOW RISK
+                  {protocolA.risk}
                 </span>
               </div>
             </div>
 
             <div className="text-right">
-              <p className="text-text-secondary text-sm font-medium">
-                Current APY
-              </p>
-              <div className="flex items-center justify-end gap-1 mt-1 text-slate-900 dark:text-white">
-                <h3 className="text-3xl font-bold">4.2%</h3>
-                <span className="material-symbols-outlined text-risk-low text-sm">
-                  trending_up
-                </span>
-              </div>
-              <p className="text-xs text-text-secondary mt-1">7d avg: 4.1%</p>
+              {/* avgApy */}
+              
             </div>
           </div>
 
@@ -43,14 +42,11 @@ export default function SummarySection() {
             <div className="flex-1">
               <p className="text-xs text-text-secondary mb-1">TVL</p>
               <p className="text-slate-900 dark:text-white font-semibold">
-                $5.24B
+                {formatTVL(protocolA.tvl)}
               </p>
             </div>
             <div className="flex-1 border-l border-gray-200 dark:border-gray-800 pl-4">
-              <p className="text-xs text-text-secondary mb-1">Market Share</p>
-              <p className="text-slate-900 dark:text-white font-semibold">
-                18.5%
-              </p>
+              
             </div>
           </div>
         </div>
@@ -66,28 +62,19 @@ export default function SummarySection() {
               </p>
               <div className="flex items-baseline gap-2 mt-1">
                 <h3 className="text-4xl font-black text-slate-900 dark:text-white">
-                  88
+                  {protocolB.finalRiskScore.score}
                   <span className="text-xl text-text-secondary font-normal">
                     /100
                   </span>
                 </h3>
                 <span className="bg-risk-low/20 text-risk-low text-xs font-bold px-2 py-1 rounded-full border border-risk-low/20">
-                  LOW RISK
+                  {protocolB.risk}
                 </span>
               </div>
             </div>
 
             <div className="text-right">
-              <p className="text-text-secondary text-sm font-medium">
-                Current APY
-              </p>
-              <div className="flex items-center justify-end gap-1 mt-1 text-slate-900 dark:text-white">
-                <h3 className="text-3xl font-bold">3.8%</h3>
-                <span className="material-symbols-outlined text-risk-medium text-sm">
-                  trending_flat
-                </span>
-              </div>
-              <p className="text-xs text-text-secondary mt-1">7d avg: 3.8%</p>
+              {/* avgApy */}
             </div>
           </div>
 
@@ -95,14 +82,14 @@ export default function SummarySection() {
             <div className="flex-1">
               <p className="text-xs text-text-secondary mb-1">TVL</p>
               <p className="text-slate-900 dark:text-white font-semibold">
-                $1.82B
+                {formatTVL(protocolB.tvl)}
               </p>
             </div>
             <div className="flex-1 border-l border-gray-200 dark:border-gray-800 pl-4">
-              <p className="text-xs text-text-secondary mb-1">Market Share</p>
+              {/* <p className="text-xs text-text-secondary mb-1">Market Share</p>
               <p className="text-slate-900 dark:text-white font-semibold">
                 6.2%
-              </p>
+              </p> */}
             </div>
           </div>
         </div>

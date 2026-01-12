@@ -1,285 +1,202 @@
-export default function ComparisonTable() {
+import { Protocol } from "@/lib/models/protocols";
+
+/* =======================
+   TYPES
+======================= */
+
+type ComparisonTableProps = {
+  protocolA: Protocol;
+  protocolB: Protocol;
+};
+
+type MetricValue = {
+  value: number;
+  display?: number;
+  summary?: string;
+};
+
+type MetricRowProps = {
+  label: string;
+  icon: string;
+  unit?: string;
+  a: MetricValue;
+  b: MetricValue;
+  color?: string;
+};
+
+/* =======================
+   UI COMPONENTS
+======================= */
+
+function ProgressBar({
+  value,
+  color = "bg-primary",
+}: {
+  value: number;
+  color?: string;
+}) {
+  return (
+    <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5">
+      <div
+        className={`${color} h-1.5 rounded-full transition-all duration-300`}
+        style={{ width: `${Math.min(value, 100)}%` }}
+      />
+    </div>
+  );
+}
+
+function MetricCell({
+  metric,
+  unit,
+  color,
+}: {
+  metric: MetricValue;
+  unit: string;
+  color?: string;
+}) {
+  return (
+    <div className="col-span-4 border-l border-gray-200 dark:border-gray-700 pl-4">
+      <div className="flex flex-col gap-1">
+        <span className="text-slate-900 dark:text-white font-bold text-sm">
+          {metric.display ?? metric.value}
+          {unit}
+        </span>
+
+        <ProgressBar value={metric.value} color={color} />
+
+        {metric.summary && (
+          <span className="text-xs text-text-secondary">{metric.summary}</span>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function MetricRow({ label, icon, unit = "%", a, b, color }: MetricRowProps) {
+  const diff = Math.abs(a.value - b.value).toFixed(1);
+
+  return (
+    <div className="group border-b border-gray-200 dark:border-border-dark hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+      <div className="grid grid-cols-12 gap-4 p-4 items-start">
+        {/* Metric name */}
+        <div className="col-span-4 md:col-span-3 flex items-center gap-2">
+          <span className="material-symbols-outlined text-text-secondary">
+            {icon}
+          </span>
+          <span className="text-slate-900 dark:text-white font-medium text-sm">
+            {label}
+          </span>
+        </div>
+
+        {/* Protocol A */}
+        <MetricCell metric={a} unit={unit} color={color} />
+
+        {/* Protocol B */}
+        <MetricCell metric={b} unit={unit} color={color} />
+
+        {/* Diff */}
+        <div className="hidden md:flex md:col-span-1 items-center justify-center">
+          <span className="text-xs font-bold text-text-secondary">{diff}%</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* =======================
+   MAIN COMPONENT
+======================= */
+
+export default function ComparisonTable({
+  protocolA,
+  protocolB,
+}: ComparisonTableProps) {
   return (
     <div className="mt-4 bg-white dark:bg-surface-dark border border-gray-200 dark:border-border-dark rounded-xl overflow-hidden shadow-sm">
-      {/* Sticky Header */}
-      <div className="grid grid-cols-12 gap-4 p-4 bg-gray-50 dark:bg-[#151b26] border-b border-gray-200 dark:border-border-dark text-xs font-bold text-text-secondary uppercase tracking-wider sticky top-0 z-10">
+      {/* HEADER */}
+      <div className="grid grid-cols-12 gap-4 p-4 bg-gray-50 dark:bg-[#151b26] border-b border-gray-200 dark:border-border-dark text-xs font-bold uppercase tracking-wider sticky top-0 z-10">
         <div className="col-span-4 md:col-span-3">Metric</div>
-        <div className="col-span-4 text-left pl-2 border-l border-gray-200 dark:border-gray-700">
-          Aave V3
-        </div>
-        <div className="col-span-4 text-left pl-2 border-l border-gray-200 dark:border-gray-700">
-          Compound V3
-        </div>
+        <div className="col-span-4 border-l pl-4">{protocolA.name}</div>
+        <div className="col-span-4 border-l pl-4">{protocolB.name}</div>
         <div className="hidden md:block md:col-span-1 text-center">Diff</div>
       </div>
 
-      {/* Category: Security & Audits */}
-      <div className="group border-b border-gray-200 dark:border-border-dark last:border-0 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
-        <div className="grid grid-cols-12 gap-4 p-4 items-center">
-          <div className="col-span-4 md:col-span-3">
-            <div className="flex items-center gap-2">
-              <span className="material-symbols-outlined text-text-secondary">
-                gavel
-              </span>
-              <span className="text-slate-900 dark:text-white font-medium text-sm">
-                Audit Score
-              </span>
-              <span
-                className="material-symbols-outlined text-text-secondary text-[16px] cursor-help"
-                title="Based on number and quality of audits"
-              >
-                info
-              </span>
-            </div>
-          </div>
+      {/* AUDIT SCORE */}
+      <MetricRow
+        label="Audit Score"
+        icon="gavel"
+        a={{
+          value: protocolA.auditRisk.score,
+          summary: protocolA.auditRisk.summary,
+        }}
+        b={{
+          value: protocolB.auditRisk.score,
+          summary: protocolB.auditRisk.summary,
+        }}
+        color="bg-risk-low"
+      />
 
-          <div className="col-span-4 border-l border-gray-200 dark:border-gray-700 pl-4">
-            <div className="flex flex-col gap-1">
-              <span className="text-slate-900 dark:text-white font-bold text-sm">
-                98/100
-              </span>
-              <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5">
-                <div
-                  className="bg-risk-low h-1.5 rounded-full"
-                  style={{ width: "98%" }}
-                ></div>
-              </div>
-              <span className="text-xs text-text-secondary">
-                6 Audits (SigmaPrime, OpenZeppelin)
-              </span>
-            </div>
-          </div>
+      {/* LIQUIDITY */}
+      <MetricRow
+        label="Liquidity Utilization"
+        icon="water_drop"
+        a={{
+          value: protocolA.liquidityRisk.score,
+          summary: protocolA.liquidityRisk.summary,
+        }}
+        b={{
+          value: protocolB.liquidityRisk.score,
+          summary: protocolB.liquidityRisk.summary,
+        }}
+        color="bg-primary"
+      />
 
-          <div className="col-span-4 border-l border-gray-200 dark:border-gray-700 pl-4">
-            <div className="flex flex-col gap-1">
-              <span className="text-slate-900 dark:text-white font-bold text-sm">
-                95/100
-              </span>
-              <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5">
-                <div
-                  className="bg-risk-low h-1.5 rounded-full"
-                  style={{ width: "95%" }}
-                ></div>
-              </div>
-              <span className="text-xs text-text-secondary">
-                4 Audits (OpenZeppelin, Trail of Bits)
-              </span>
-            </div>
-          </div>
+      {/* COMPOSABILITY */}
+      <MetricRow
+        label="Composability Risk"
+        icon="show_chart"
+        a={{
+          value: protocolA.dependencyRisk.score,
+          summary: protocolA.dependencyRisk.summary,
+        }}
+        b={{
+          value: protocolB.dependencyRisk.score,
+          summary: protocolB.dependencyRisk.summary,
+        }}
+        color="bg-risk-medium"
+      />
 
-          <div className="hidden md:flex md:col-span-1 items-center justify-center">
-            <span className="text-risk-low text-xs font-bold bg-risk-low/10 px-2 py-1 rounded">
-              +3%
-            </span>
-          </div>
-        </div>
-      </div>
+      {/* WHALE CONCENTRATION */}
+      <MetricRow
+        label="Whale Concentration"
+        icon="group"
+        a={{
+          value: protocolA.whaleConcentration.score,
+          summary: protocolA.whaleConcentration.summary,
+        }}
+        b={{
+          value: protocolB.whaleConcentration.score,
+          summary: protocolB.whaleConcentration.summary,
+        }}
+        color="bg-risk-high"
+      />
 
-      {/* Category: Liquidity */}
-      <div className="group border-b border-gray-200 dark:border-border-dark last:border-0 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
-        <div className="grid grid-cols-12 gap-4 p-4 items-center">
-          <div className="col-span-4 md:col-span-3">
-            <div className="flex items-center gap-2">
-              <span className="material-symbols-outlined text-text-secondary">
-                water_drop
-              </span>
-              <span className="text-slate-900 dark:text-white font-medium text-sm">
-                Liquidity Utilization
-              </span>
-            </div>
-          </div>
-
-          <div className="col-span-4 border-l border-gray-200 dark:border-gray-700 pl-4">
-            <div className="flex flex-col gap-1">
-              <span className="text-slate-900 dark:text-white font-bold text-sm">
-                78%
-              </span>
-              <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5">
-                <div
-                  className="bg-primary h-1.5 rounded-full"
-                  style={{ width: "78%" }}
-                ></div>
-              </div>
-              <span className="text-xs text-text-secondary">Optimal range</span>
-            </div>
-          </div>
-
-          <div className="col-span-4 border-l border-gray-200 dark:border-gray-700 pl-4">
-            <div className="flex flex-col gap-1">
-              <span className="text-slate-900 dark:text-white font-bold text-sm">
-                62%
-              </span>
-              <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5">
-                <div
-                  className="bg-primary/60 h-1.5 rounded-full"
-                  style={{ width: "62%" }}
-                ></div>
-              </div>
-              <span className="text-xs text-text-secondary">
-                Under-utilized
-              </span>
-            </div>
-          </div>
-
-          <div className="hidden md:flex md:col-span-1 items-center justify-center">
-            <span className="text-text-secondary text-xs font-bold">+16%</span>
-          </div>
-        </div>
-      </div>
-
-      {/* Category: Volatility */}
-      <div className="group border-b border-gray-200 dark:border-border-dark last:border-0 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
-        <div className="grid grid-cols-12 gap-4 p-4 items-center">
-          <div className="col-span-4 md:col-span-3">
-            <div className="flex items-center gap-2">
-              <span className="material-symbols-outlined text-text-secondary">
-                show_chart
-              </span>
-              <span className="text-slate-900 dark:text-white font-medium text-sm">
-                APY Volatility (30d)
-              </span>
-            </div>
-          </div>
-
-          <div className="col-span-4 border-l border-gray-200 dark:border-gray-700 pl-4">
-            <div className="flex flex-col gap-1">
-              <span className="text-slate-900 dark:text-white font-bold text-sm">
-                Low
-              </span>
-              <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5">
-                <div
-                  className="bg-risk-low h-1.5 rounded-full"
-                  style={{ width: "20%" }}
-                ></div>
-              </div>
-            </div>
-          </div>
-
-          <div className="col-span-4 border-l border-gray-200 dark:border-gray-700 pl-4">
-            <div className="flex flex-col gap-1">
-              <span className="text-slate-900 dark:text-white font-bold text-sm">
-                Medium
-              </span>
-              <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5">
-                <div
-                  className="bg-risk-medium h-1.5 rounded-full"
-                  style={{ width: "50%" }}
-                ></div>
-              </div>
-            </div>
-          </div>
-
-          <div className="hidden md:flex md:col-span-1 items-center justify-center">
-            <span className="text-risk-low material-symbols-outlined text-lg">
-              check_circle
-            </span>
-          </div>
-        </div>
-      </div>
-
-      {/* Category: Whale Concentration */}
-      <div className="group border-b border-gray-200 dark:border-border-dark last:border-0 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
-        <div className="grid grid-cols-12 gap-4 p-4 items-center">
-          <div className="col-span-4 md:col-span-3">
-            <div className="flex items-center gap-2">
-              <span className="material-symbols-outlined text-text-secondary">
-                group
-              </span>
-              <span className="text-slate-900 dark:text-white font-medium text-sm">
-                Whale Concentration
-              </span>
-              <span
-                className="material-symbols-outlined text-text-secondary text-[16px] cursor-help"
-                title="% of supply held by top 10 wallets"
-              >
-                info
-              </span>
-            </div>
-          </div>
-
-          <div className="col-span-4 border-l border-gray-200 dark:border-gray-700 pl-4">
-            <div className="flex flex-col gap-1">
-              <span className="text-slate-900 dark:text-white font-bold text-sm">
-                12%
-              </span>
-              <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5">
-                <div
-                  className="bg-risk-low h-1.5 rounded-full"
-                  style={{ width: "12%" }}
-                ></div>
-              </div>
-              <span className="text-xs text-text-secondary">
-                Top 10 Wallets
-              </span>
-            </div>
-          </div>
-
-          <div className="col-span-4 border-l border-gray-200 dark:border-gray-700 pl-4">
-            <div className="flex flex-col gap-1">
-              <span className="text-slate-900 dark:text-white font-bold text-sm">
-                35%
-              </span>
-              <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5">
-                <div
-                  className="bg-risk-medium h-1.5 rounded-full"
-                  style={{ width: "35%" }}
-                ></div>
-              </div>
-              <span className="text-xs text-text-secondary">
-                Top 10 Wallets
-              </span>
-            </div>
-          </div>
-
-          <div className="hidden md:flex md:col-span-1 items-center justify-center">
-            <span className="text-risk-low material-symbols-outlined text-lg">
-              check_circle
-            </span>
-          </div>
-        </div>
-      </div>
-
-      {/* Category: Maturity */}
-      <div className="group border-b border-gray-200 dark:border-border-dark last:border-0 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
-        <div className="grid grid-cols-12 gap-4 p-4 items-center">
-          <div className="col-span-4 md:col-span-3">
-            <div className="flex items-center gap-2">
-              <span className="material-symbols-outlined text-text-secondary">
-                history
-              </span>
-              <span className="text-slate-900 dark:text-white font-medium text-sm">
-                Protocol Maturity
-              </span>
-            </div>
-          </div>
-
-          <div className="col-span-4 border-l border-gray-200 dark:border-gray-700 pl-4">
-            <div className="flex flex-col gap-1">
-              <span className="text-slate-900 dark:text-white font-bold text-sm">
-                1150 Days
-              </span>
-              <span className="text-xs text-text-secondary">
-                Since V2 Launch
-              </span>
-            </div>
-          </div>
-
-          <div className="col-span-4 border-l border-gray-200 dark:border-gray-700 pl-4">
-            <div className="flex flex-col gap-1">
-              <span className="text-slate-900 dark:text-white font-bold text-sm">
-                540 Days
-              </span>
-              <span className="text-xs text-text-secondary">
-                Since V3 Launch
-              </span>
-            </div>
-          </div>
-
-          <div className="hidden md:flex md:col-span-1 items-center justify-center">
-            {/* No visual indicator needed for purely informational fields */}
-          </div>
-        </div>
-      </div>
+      {/* PROTOCOL MATURITY (NO SPECIAL LOGIC) */}
+      <MetricRow
+        label="Protocol Maturity"
+        icon="history"
+        a={{
+          value: protocolA.protocolMaturity.score,
+          display: protocolA.protocolMaturity.score,
+          summary: protocolA.protocolMaturity.summary,
+        }}
+        b={{
+          value: protocolB.protocolMaturity.score,
+          display: protocolB.protocolMaturity.score,
+          summary: protocolB.protocolMaturity.summary,
+        }}
+        color="bg-emerald-500"
+      />
     </div>
   );
 }
