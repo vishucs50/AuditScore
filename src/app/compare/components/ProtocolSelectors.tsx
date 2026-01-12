@@ -17,7 +17,7 @@ export default function ProtocolSelectors({
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 px-4 pb-6">
       {/* Protocol A */}
       <div>
-        <label className="block text-xs font-bold uppercase mb-2">
+        <label className="block text-xs font-bold uppercase m-5">
           Protocol A
         </label>
         <select
@@ -37,7 +37,7 @@ export default function ProtocolSelectors({
 
       {/* Protocol B */}
       <div>
-        <label className="block text-xs font-bold uppercase mb-2">
+        <label className="block text-xs font-bold uppercase m-5">
           Protocol B
         </label>
         <select
