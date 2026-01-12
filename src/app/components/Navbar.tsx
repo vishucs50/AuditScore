@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
 import { Protocol } from "@/lib/models/protocols";
-
+import ConnectWallet from "./ConnectWallet";
 type NavbarProps = {
   protocols: Protocol[];
 };
@@ -77,12 +77,8 @@ export default function Navbar({ protocols }: NavbarProps) {
           </Link>
         )}
         {pathname === "/dashboard" && (
-          <Link
-            href="/protocol"
-            className="bg-primary hover:bg-blue-800 text-white text-sm font-bold h-9 px-5 rounded-lg shadow-lg shadow-blue-900/20 inline-flex items-center justify-center"
-          >
-            Explore Protocol Risk
-          </Link>
+          <ConnectWallet/>
+          
         )}
 
         {pathname === "/protocol" && (

@@ -13,6 +13,7 @@ import ChainSnapshotSkeleton from "./components/skeletons/ChainSnapshotSkeleton"
 import ProtocolTablesSkeleton from "./components/skeletons/ProtocolTablesSkeleton";
 import LiveRiskFeedSkeleton from "./components/skeletons/LiveRiskFeedSkeleton";
 import StatsGridSkeleton from "./components/skeletons/StatsGridSkeleton";
+import WalletExposure from "../components/WalletExposure";
   export default function DashboardPage() {
       const [protocols, setProtocols] = useState<Protocol[]>([]);
     const [loading,setLoading]= useState(true);
@@ -64,6 +65,9 @@ import StatsGridSkeleton from "./components/skeletons/StatsGridSkeleton";
           </div>
 
           <LiveRiskFeed />
+          <aside className="col-span-4">
+            <WalletExposure />
+          </aside>
         </div>
       </main>
     </div>

@@ -53,8 +53,8 @@ export default function LiveRiskFeed() {
 
 
   return (
-    <aside className="bg-card-dark rounded-xl border border-border-dark top-24 h-40">
-      <div className="p-5 border-b border-border-dark flex justify-between">
+    <aside className="bg-card-dark rounded-xl border border-border-dark top-24 h-200">
+      <div className="p-5 border-b border-border-dark flex justify-between ">
         <h2 className="font-bold flex gap-2 items-center">
           <Ping /> Live Risk Feed
         </h2>
