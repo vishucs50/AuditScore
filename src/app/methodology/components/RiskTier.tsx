@@ -35,20 +35,20 @@ function RiskCategories() {
         </div>
 
         {/* MEDIUM RISK */}
-        <div className="relative overflow-hidden rounded-2xl border border-risk-med/30 bg-gradient-to-br from-risk-med/10 to-transparent p-6">
-          <div className="absolute inset-0 bg-risk-med/5 blur-2xl opacity-30" />
+        <div className="relative overflow-hidden rounded-2xl border border-risk-medium/30 bg-linear-to-br from-risk-medium/10 to-transparent p-6">
+          <div className="absolute inset-0 bg-risk-medium/5 blur-2xl opacity-30" />
 
-          <span className="material-symbols-outlined absolute right-4 top-4 text-[120px] text-risk-med opacity-10">
+          <span className="material-symbols-outlined absolute right-4 top-4 text-[120px] text-risk-medium opacity-10">
             warning
           </span>
 
           <div className="relative z-10 flex items-center gap-4 mb-4">
-            <div className="size-11 rounded-full bg-risk-med flex items-center justify-center text-black shadow-lg shadow-risk-med/30">
+            <div className="size-11 rounded-full bg-risk-medium flex items-center justify-center text-black shadow-lg shadow-risk-medium/30">
               <span className="material-symbols-outlined">gpp_maybe</span>
             </div>
             <div>
               <h3 className="text-lg font-bold text-white">Medium Risk</h3>
-              <p className="text-risk-med text-sm font-bold">Score 50 – 79</p>
+              <p className="text-risk-medium text-sm font-bold">Score 50 – 79</p>
             </div>
           </div>
 
