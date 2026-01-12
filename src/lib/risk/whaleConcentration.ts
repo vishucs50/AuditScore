@@ -3,12 +3,15 @@ function sigmoid(x: number) {
 }
 
 function whaleScoreFromPercent(percent: number) {
-  const x = Math.max(0, Math.min(100, percent));
-  const x0 = 25; // inflection point
-  const k = 0.15; // steepness
+  // Stretch domain artificially
+  const stretched = percent * 1.6; // key fix
+  const x = Math.max(0, Math.min(100, stretched));
+
+  const x0 = 40; // move center
+  const k = 0.12;
+
   return Math.round(sigmoid(k * (x - x0)) * 100);
 }
-
 /**
  * TEMP PROXY until holder API is added
  * Uses TVL size to estimate decentralization
