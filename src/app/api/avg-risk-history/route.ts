@@ -17,7 +17,7 @@ export async function GET() {
           day: {
             $dateToString: {
               format: "%Y-%m-%d",
-              date: "$updatedAt",
+              date: "$createdAt",
             },
           },
         },
