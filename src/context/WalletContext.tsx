@@ -17,7 +17,7 @@ export function WalletProvider({ children }: { children: React.ReactNode }) {
   const [chainId, setChainId] = useState<number | null>(null);
   const [sdk, setSdk] = useState<MetaMaskSDK | null>(null);
 
-  // ✅ Init MetaMask ONLY in browser
+  // 🔥 IMPORTANT: init MetaMask ONLY on client
   useEffect(() => {
     if (typeof window === "undefined") return;
 
