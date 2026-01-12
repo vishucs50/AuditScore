@@ -4,6 +4,10 @@ import Hero from "./components/Hero";
 import RiskBreakdown from "./components/RiskBreakDown";
 import { useState,useEffect } from "react";
 import { useParams, useSearchParams } from "next/navigation";
+import ContextBarSkeleton from "./components/skeletons/ContextBarSkeleton";
+import HeroSkeleton from "./components/skeletons/HeroSkeleton";
+import RiskBreakdownSkeleton from "./components/skeletons/RiskBreakdownSkeleton";
+
 
  type Protocol = {
    // ── Protocol identity ─────────────────────
@@ -59,7 +63,21 @@ export default function DashboardPage() {
       
   }, [slug,chain]);
 
-  if (loading) return <div className="p-10">Loading...</div>;
+  if (loading) {
+    return (
+      <>
+        
+
+        <main className="flex-1 overflow-x-hidden">
+          <div className="layout-container max-w-7xl mx-auto px-4 md:px-8 lg:px-10 py-8">
+            <ContextBarSkeleton />
+            <HeroSkeleton />
+            <RiskBreakdownSkeleton />
+          </div>
+        </main>
+      </>
+    );
+  }
   if (!protocol) return <div className="p-10">Protocol not found</div>;
 
   return (

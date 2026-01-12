@@ -5,8 +5,9 @@ import ProtocolFilters from "./components/ProtocolFilter";
 import { useState,useEffect } from "react";
 import { Protocol } from "@/lib/models/protocols";
 import { computeGlobalStats } from "@/lib/utils/computeGlobalStats";
-
-
+import GlobalStatsSkeleton from "./components/skeletons/GlobalStatsSkeleton";
+import ListProtocolSkeleton from "./components/skeletons/ListProtocolSkeleton";
+import ProtocolFiltersSkeleton from "./components/skeletons/ProtocolFilterSkeleton";
 export default function ProtocolsPage() {
   const [protocols, setProtocols] = useState<Protocol[]>([]);
   const [sortBy, setSortBy] = useState<"risk" | "tvl">("risk");
@@ -20,7 +21,29 @@ export default function ProtocolsPage() {
     });
   }, []);
   if (loading) {
-    return <div>Loading protocols...</div>;
+    return (
+      <>
+        
+        <main className="flex-1 w-full flex justify-center py-8">
+          <div className="w-full max-w-7xl px-6 flex flex-col gap-8">
+            {/* Heading Skeleton */}
+            <div className="flex flex-col gap-4">
+              <div className="h-12 w-96 rounded bg-[#1f2a40] animate-pulse" />
+              <div className="h-4 w-130 rounded bg-[#1f2a40] animate-pulse" />
+            </div>
+
+            {/* Global Stats */}
+            <GlobalStatsSkeleton />
+
+            {/* Filters */}
+            <ProtocolFiltersSkeleton />
+
+            {/* Protocol List */}
+            <ListProtocolSkeleton />
+          </div>
+        </main>
+      </>
+    );
   }
   const stats = computeGlobalStats(protocols);
   console.log(stats);
