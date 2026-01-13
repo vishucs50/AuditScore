@@ -1,7 +1,8 @@
 # 🚨 AuditScore — DeFi & Blockchain Risk Intelligence Platform
 
-AuditScore is a **crypto-native risk analysis platform** that helps users evaluate the **safety, reliability, and risk exposure** of DeFi protocols, blockchains, and wallets.
+It helps users understand how safe or risky a blockchain, DeFi protocol, or wallet exposure is—before they put money in.
 
+Think of AuditScore as a credit score for Web3.
 It converts complex on-chain data, audit reports, and ecosystem signals into a **simple, transparent risk score**, enabling safer decision-making in Web3.
 
 > Think of AuditScore as a **credit score for DeFi and blockchain ecosystems**.
@@ -27,6 +28,7 @@ AuditScore provides:
 - Unified **risk scores**
 - Clear **risk labels**
 - Wallet-based **exposure analysis**
+- Summary and affecting factors on the basis of each parameters
 - Chain-level and protocol-level insights
 - Transparent, explainable metrics
 
@@ -38,7 +40,7 @@ All without custody or private key access.
 
 ### 🔐 Protocol Risk Scoring
 Each DeFi protocol is scored using:
-- Smart contract audit status
+- Smart audit status
 - Exploit and incident history
 - TVL stability and volatility
 - Governance and admin key risk
@@ -107,6 +109,7 @@ AuditScore focuses on **clarity, not complexity**.
 - ethers.js
 - MetaMask SDK
 - Public wallet read-only access
+- defillama
 
 ### Backend
 - Modular API-based risk engine
