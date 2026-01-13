@@ -1,4 +1,5 @@
 # 🚨 AuditScore — DeFi & Blockchain Risk Intelligence Platform
+ **Live Website:** https://auditscore.vercel.app
 
 It helps users understand how safe or risky a blockchain, DeFi protocol, or wallet exposure is—before they put money in.
 
@@ -6,7 +7,6 @@ Think of AuditScore as a credit score for Web3.
 It converts complex on-chain data, audit reports, and ecosystem signals into a **simple, transparent risk score**, enabling safer decision-making in Web3.
 
 > Think of AuditScore as a **credit score for DeFi and blockchain ecosystems**.
- **Live Website:** https://auditscore.vercel.app
 ---
 
 ## 🌍 Problem Statement
