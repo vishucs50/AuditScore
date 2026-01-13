@@ -6,7 +6,7 @@ Think of AuditScore as a credit score for Web3.
 It converts complex on-chain data, audit reports, and ecosystem signals into a **simple, transparent risk score**, enabling safer decision-making in Web3.
 
 > Think of AuditScore as a **credit score for DeFi and blockchain ecosystems**.
-
+ **Live Website:** https://auditscore.vercel.app
 ---
 
 ## 🌍 Problem Statement
